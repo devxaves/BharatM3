@@ -1,26 +1,49 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { Play } from 'lucide-react';
+import { Check, Copy, ExternalLink, Play, Terminal } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Button, PageHeader, Panel, Segmented } from '@/components/ui/primitives';
 import { Badge } from '@/components/ui/status';
+import { useToast } from '@/components/ui/toast';
 import { api } from '@/lib/client/api';
 import { cx } from '@/lib/format';
 
 const ENDPOINTS = [
-  { method: 'GET', path: '/api/v1/materials/{cnmc}?format=json|idoc|odata&org={CPSE}', desc: 'Harmonised material master as JSON, a MATMAS05 IDoc (ECC) or an API_PRODUCT_SRV entity (S/4HANA). org fills BISMT / ProductOldID with that CPSE’s legacy code.' },
-  { method: 'GET', path: '/api/v1/lookup?org={CPSE}&code={legacy code}', desc: 'Resolve a CPSE legacy code to its Common National Material Code and sibling codes in other CPSEs.' },
-  { method: 'GET', path: '/api/v1/export?org={CPSE}&format=idoc|odata&since={ISO date}', desc: 'Delta distribution of every national code relevant to one CPSE — what an ALE/BD10 or CPI iFlow would consume.' },
+  {
+    method: 'GET',
+    path: '/api/v1/materials/{cnmc}?format=json|idoc|odata&org={CPSE}',
+    desc: 'Harmonised material master as JSON, MATMAS05 IDoc (ECC) or API_PRODUCT_SRV entity (S/4HANA).',
+  },
+  {
+    method: 'GET',
+    path: '/api/v1/lookup?org={CPSE}&code={legacyCode}',
+    desc: 'Resolve any CPSE legacy code to its Common National Material Code and sibling codes.',
+  },
+  {
+    method: 'GET',
+    path: '/api/v1/export?org={CPSE}&format=idoc|odata&since={ISO date}',
+    desc: 'Delta distribution of every national code relevant to one CPSE (ALE / CPI iFlow ingestion).',
+  },
 ];
 
 export default function IntegrationPage() {
-  const canon = useQuery({ queryKey: ['canonical'], queryFn: () => api<{ canonical: { id: string; cnmc: string; orgs: string[]; mappings: number }[]; mappings: { canonicalId: string; org: string; legacyCode: string }[] }>('/api/canonical') });
+  const toast = useToast();
+  const canon = useQuery({
+    queryKey: ['canonical'],
+    queryFn: () =>
+      api<{
+        canonical: { id: string; cnmc: string; orgs: string[]; mappings: number }[];
+        mappings: { canonicalId: string; org: string; legacyCode: string }[];
+      }>('/api/canonical'),
+  });
+
   const [mode, setMode] = useState<'material' | 'lookup' | 'export'>('material');
   const [cnmc, setCnmc] = useState('');
   const [org, setOrg] = useState('CPCL');
   const [fmt, setFmt] = useState<'json' | 'idoc' | 'odata'>('idoc');
   const [code, setCode] = useState('');
+  const [copied, setCopied] = useState(false);
   const [out, setOut] = useState<{ url: string; status: number; body: string; ms: number } | null>(null);
 
   useEffect(() => {
@@ -36,70 +59,119 @@ export default function IntegrationPage() {
   }, [canon.data, cnmc]);
 
   const url =
-    mode === 'material' ? `/api/v1/materials/${encodeURIComponent(cnmc)}?format=${fmt}&org=${org}` : mode === 'lookup' ? `/api/v1/lookup?org=${org}&code=${encodeURIComponent(code)}` : `/api/v1/export?org=${org}&format=${fmt === 'odata' ? 'odata' : 'idoc'}`;
+    mode === 'material'
+      ? `/api/v1/materials/${encodeURIComponent(cnmc)}?format=${fmt}&org=${org}`
+      : mode === 'lookup'
+        ? `/api/v1/lookup?org=${org}&code=${encodeURIComponent(code)}`
+        : `/api/v1/export?org=${org}&format=${fmt === 'odata' ? 'odata' : 'idoc'}`;
 
   const run = async () => {
     const t0 = performance.now();
-    const res = await fetch(url);
-    const text = await res.text();
-    let body = text;
     try {
-      const j = JSON.parse(text);
-      if (mode === 'export' && Array.isArray(j.documents)) j.documents = j.documents.slice(0, 2).concat(j.documents.length > 2 ? [`… ${j.documents.length - 2} more documents`] : []);
-      body = JSON.stringify(j, null, 2);
-    } catch {}
-    setOut({ url, status: res.status, body, ms: Math.round(performance.now() - t0) });
+      const res = await fetch(url);
+      const text = await res.text();
+      let body = text;
+      try {
+        const j = JSON.parse(text);
+        if (mode === 'export' && Array.isArray(j.documents)) {
+          j.documents = j.documents.slice(0, 2).concat(j.documents.length > 2 ? [`… ${j.documents.length - 2} more documents`] : []);
+        }
+        body = JSON.stringify(j, null, 2);
+      } catch {}
+      setOut({ url, status: res.status, body, ms: Math.round(performance.now() - t0) });
+    } catch (e: any) {
+      setOut({ url, status: 500, body: JSON.stringify({ error: e.message }, null, 2), ms: Math.round(performance.now() - t0) });
+    }
+  };
+
+  const copyResponse = () => {
+    if (!out) return;
+    navigator.clipboard.writeText(out.body);
+    setCopied(true);
+    toast({ kind: 'info', title: 'Payload copied' });
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div>
+    <div className="space-y-3">
       <PageHeader
-        eyebrow="Integration"
-        title="SAP / ERP integration"
-        description="No CPSE has to renumber anything. National codes flow back into each ERP through its standard interfaces, carrying the CPSE’s own legacy code in the old-material-number field so every document, stock and PO history stays traceable."
+        eyebrow="Enterprise Integration"
+        title="SAP & ERP integration"
+        description="National codes synchronize into CPSE ERPs without renumbering. BISMT / ProductOldID maintains uninterrupted legacy traceability."
       />
+
       <div className="grid grid-cols-12 gap-3">
-        <div className="col-span-5 space-y-3">
-          <Panel title="REST endpoints (v1, read-only)">
+        {/* Left Column: API Reference & Architecture */}
+        <div className="col-span-12 lg:col-span-5 space-y-3">
+          <Panel title="REST API Endpoints (v1, Read-Only)">
             <div className="divide-y divide-grey-100">
               {ENDPOINTS.map((e) => (
-                <div key={e.path} className="px-4 py-2.5">
+                <div key={e.path} className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <Badge tone="high">{e.method}</Badge>
-                    <code className="break-all text-caption text-primary-800">{e.path}</code>
+                    <code className="break-all font-mono text-caption font-semibold text-primary-800">{e.path}</code>
                   </div>
-                  <p className="mt-1 text-caption text-grey-600">{e.desc}</p>
+                  <p className="mt-1 text-caption text-grey-600 leading-relaxed">{e.desc}</p>
                 </div>
               ))}
             </div>
           </Panel>
-          <Panel title="Production integration path">
-            <ol className="space-y-2 px-4 py-3 text-caption text-grey-700">
-              <li>
-                <b className="text-grey-900">ECC 6.0 CPSEs (CPCL, SAIL):</b> ALE distribution of MATMAS05 IDocs via a logical system per CPSE; the national code goes to <span className="font-mono">MARA-NORMT</span> + Z-segment, the legacy number to <span className="font-mono">MARA-BISMT</span>.
+
+          <Panel title="Production ERP Integration Paths" subtitle="Direct integration without business disruption">
+            <ol className="space-y-2.5 p-4 text-caption text-grey-700">
+              <li className="flex items-start gap-2">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-100 font-mono text-micro font-bold text-primary-800">
+                  1
+                </span>
+                <div>
+                  <b className="text-grey-900">SAP ECC 6.0 (CPCL, SAIL):</b> ALE MATMAS05 IDoc distribution. CNMC maps to <span className="font-mono text-grey-900 font-medium">MARA-NORMT</span> + Z-segment; legacy number preserved in <span className="font-mono text-grey-900 font-medium">MARA-BISMT</span>.
+                </div>
               </li>
-              <li>
-                <b className="text-grey-900">S/4HANA CPSEs (NTPC, BHEL):</b> <span className="font-mono">API_PRODUCT_SRV</span> (OData v2) or SAP Integration Suite iFlow, with CNMC in a key-user extension field (<span className="font-mono">YY1_CNMC_PRD</span>).
+              <li className="flex items-start gap-2">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-100 font-mono text-micro font-bold text-primary-800">
+                  2
+                </span>
+                <div>
+                  <b className="text-grey-900">SAP S/4HANA (NTPC, BHEL):</b> <span className="font-mono text-grey-900 font-medium">API_PRODUCT_SRV</span> OData v2 or SAP Integration Suite iFlow with key-user custom field <span className="font-mono text-grey-900 font-medium">YY1_CNMC_PRD</span>.
+                </div>
               </li>
-              <li>
-                <b className="text-grey-900">Oracle EBS (CIL):</b> item cross-reference type <span className="font-mono">NATIONAL_CODE</span> loaded through the EGO item open interface from the same JSON.
-              </li>
-              <li>
-                <b className="text-grey-900">Inbound:</b> nightly MARA/MAKT/MARC extracts (or change pointers) land in the ingestion layer; the pipeline is idempotent so re-sends are harmless.
+              <li className="flex items-start gap-2">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-100 font-mono text-micro font-bold text-primary-800">
+                  3
+                </span>
+                <div>
+                  <b className="text-grey-900">Oracle EBS (CIL):</b> Item cross-reference type <span className="font-mono text-grey-900 font-medium">NATIONAL_CODE</span> ingested via EGO open interface.
+                </div>
               </li>
             </ol>
-            <div className="border-t border-grey-200 px-4 py-2 text-micro text-grey-500">Full design: docs/sap-integration.md. Live SAP connectivity is out of MVP scope by design (PRD §3) — payloads here are shape-accurate mocks.</div>
           </Panel>
         </div>
+
+        {/* Right Column: Interactive API Console */}
         <Panel
-          className="col-span-7"
-          title="Try it"
-          actions={<Segmented value={mode} onChange={(m) => { setMode(m); setOut(null); }} items={[{ value: 'material', label: 'Material' }, { value: 'lookup', label: 'Lookup' }, { value: 'export', label: 'Delta export' }]} />}
+          className="col-span-12 lg:col-span-7"
+          title="Interactive API Console"
+          subtitle="Test live ERP payload serialization"
+          actions={
+            <Segmented
+              value={mode}
+              onChange={(m) => {
+                setMode(m);
+                setOut(null);
+              }}
+              items={[
+                { value: 'material', label: 'Material Payload' },
+                { value: 'lookup', label: 'Code Lookup' },
+                { value: 'export', label: 'Delta Export' },
+              ]}
+            />
+          }
         >
-          <div className="flex flex-wrap items-end gap-2 border-b border-grey-200 px-4 py-3">
+          {/* Controls Bar */}
+          <div className="flex flex-wrap items-end gap-2 border-b border-grey-200 bg-grey-25 p-3">
             {mode === 'material' && (
-              <div className="min-w-[300px] flex-1">
-                <label className="field-label">National code</label>
+              <div className="min-w-[240px] flex-1">
+                <label className="field-label">National Code</label>
                 <select className="input font-mono text-caption" value={cnmc} onChange={(e) => setCnmc(e.target.value)}>
                   {canon.data?.canonical.map((c) => (
                     <option key={c.id} value={c.cnmc}>
@@ -109,36 +181,72 @@ export default function IntegrationPage() {
                 </select>
               </div>
             )}
+
             <div className="w-28">
-              <label className="field-label">Receiving CPSE</label>
-              <select className="input" value={org} onChange={(e) => setOrg(e.target.value)}>
+              <label className="field-label">Target CPSE</label>
+              <select className="input font-medium" value={org} onChange={(e) => setOrg(e.target.value)}>
                 {['CPCL', 'NTPC', 'SAIL', 'CIL', 'BHEL', 'IOCL'].map((o) => (
                   <option key={o}>{o}</option>
                 ))}
               </select>
             </div>
+
             {mode === 'lookup' && (
-              <div className="w-56">
-                <label className="field-label">Legacy code</label>
-                <input className="input font-mono" value={code} onChange={(e) => setCode(e.target.value)} />
+              <div className="flex-1 min-w-[200px]">
+                <label className="field-label">Legacy Code</label>
+                <input className="input font-mono font-medium" value={code} onChange={(e) => setCode(e.target.value)} placeholder="e.g. 10004127" />
               </div>
             )}
-            {mode !== 'lookup' && <Segmented value={fmt} onChange={setFmt} items={[...(mode === 'material' ? [{ value: 'json' as const, label: 'JSON' }] : []), { value: 'idoc', label: 'IDoc' }, { value: 'odata', label: 'OData' }]} />}
+
+            {mode !== 'lookup' && (
+              <div>
+                <label className="field-label">Format</label>
+                <Segmented
+                  value={fmt}
+                  onChange={setFmt}
+                  items={[
+                    ...(mode === 'material' ? [{ value: 'json' as const, label: 'JSON' }] : []),
+                    { value: 'idoc', label: 'IDoc' },
+                    { value: 'odata', label: 'OData' },
+                  ]}
+                />
+              </div>
+            )}
+
             <Button variant="primary" icon={<Play size={13} />} onClick={run}>
-              Send request
+              Send Request
             </Button>
           </div>
-          <div className="flex items-center gap-2 bg-grey-50 px-4 py-1.5 font-mono text-micro text-grey-600">
-            GET {url}
-            {out && (
-              <span className={cx('ml-auto rounded-sm px-1.5 font-semibold', out.status < 300 ? 'bg-high-100 text-high-700' : 'bg-veto-100 text-veto-700')}>
-                {out.status} · {out.ms} ms
-              </span>
-            )}
+
+          {/* Request URL line */}
+          <div className="flex items-center justify-between bg-grey-100 px-4 py-2 font-mono text-micro text-grey-700 border-b border-grey-200">
+            <span className="truncate">GET {url}</span>
+            <div className="flex items-center gap-2">
+              {out && (
+                <span
+                  className={cx(
+                    'rounded px-1.5 py-0.5 font-bold',
+                    out.status < 300 ? 'bg-high-100 text-high-800' : 'bg-veto-100 text-veto-800',
+                  )}
+                >
+                  HTTP {out.status} · {out.ms}ms
+                </span>
+              )}
+              {out && (
+                <Button size="sm" variant="ghost" icon={copied ? <Check size={12} className="text-high-600" /> : <Copy size={12} />} onClick={copyResponse}>
+                  {copied ? 'Copied' : 'Copy'}
+                </Button>
+              )}
+            </div>
           </div>
-          <pre className="scroll-thin h-[520px] overflow-auto bg-grey-900 px-4 py-3 font-mono text-micro leading-[1.55] text-grey-100">{out ? out.body : '// Send a request to see the live response from this deployment'}</pre>
+
+          {/* Response Payload */}
+          <pre className="scroll-thin h-[460px] overflow-auto bg-grey-900 p-4 font-mono text-micro leading-relaxed text-grey-100">
+            {out ? out.body : '// Click "Send Request" to preview live ERP serialization payload'}
+          </pre>
         </Panel>
       </div>
     </div>
   );
 }
+

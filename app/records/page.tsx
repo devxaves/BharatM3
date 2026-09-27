@@ -2,12 +2,12 @@
 
 import { useQuery } from '@tanstack/react-query';
 import type { ColumnDef } from '@tanstack/react-table';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Eye } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useMemo, useState } from 'react';
 import { DataTable } from '@/components/ui/data-table';
-import { LoadingBar, PageHeader, Panel, Segmented } from '@/components/ui/primitives';
+import { Dialog, DialogSection, LoadingBar, PageHeader, Panel, Segmented } from '@/components/ui/primitives';
 import { Badge, CategoryChip, ConfidenceMeter, MatchTypeBadge, OrgChip, StatusBadge } from '@/components/ui/status';
 import { api } from '@/lib/client/api';
 import { cx, fmtDateTime, fmtInr, humanize } from '@/lib/format';
@@ -33,8 +33,28 @@ interface Row {
 }
 
 interface Detail {
-  raw: { rawLongText: string | null; rawManufacturer: string | null; rawPartNumber: string | null; rawMaterialGroup: string | null; lastPoPriceInr: number | null; annualQty: number | null; ingestedAt: string; rawPayload: Record<string, unknown> | null };
-  norm: { cleanedText: string; normalizedDescription: string; expansions: { term: string; expansion: string; kind: string }[]; classifierReasons: string[]; attributes: AttributeMap; qualityFlags: string[]; proposedDescription: string | null; embeddingModel: string | null; pipelineVersion: string; categoryConfidence: number } | null;
+  raw: {
+    rawLongText: string | null;
+    rawManufacturer: string | null;
+    rawPartNumber: string | null;
+    rawMaterialGroup: string | null;
+    lastPoPriceInr: number | null;
+    annualQty: number | null;
+    ingestedAt: string;
+    rawPayload: Record<string, unknown> | null;
+  };
+  norm: {
+    cleanedText: string;
+    normalizedDescription: string;
+    expansions: { term: string; expansion: string; kind: string }[];
+    classifierReasons: string[];
+    attributes: AttributeMap;
+    qualityFlags: string[];
+    proposedDescription: string | null;
+    embeddingModel: string | null;
+    pipelineVersion: string;
+    categoryConfidence: number;
+  } | null;
   org: { name: string };
   system: { name: string; version: string } | null;
   batch: { fileName: string } | null;
@@ -42,96 +62,180 @@ interface Detail {
   recommendations: { id: string; type: string; score: number; status: string; vetoed: boolean }[];
 }
 
-function RecordDetail({ id }: { id: string }) {
-  const { data } = useQuery({ queryKey: ['record', id], queryFn: () => api<Detail>(`/api/records/${id}`) });
-  if (!data) return <div className="py-4 text-caption text-grey-500">Loading record…</div>;
+function RecordDetailDialog({ id, onClose }: { id: string; onClose: () => void }) {
+  const { data, isLoading } = useQuery({
+    queryKey: ['record', id],
+    queryFn: () => api<Detail>(`/api/records/${id}`),
+  });
+
+  if (isLoading || !data) {
+    return (
+      <Dialog open onClose={onClose} title="Loading record lineage…" width={760}>
+        <LoadingBar label="Fetching extracted attributes and ERP lineage" />
+      </Dialog>
+    );
+  }
+
   const n = data.norm;
+
   return (
-    <div className="grid grid-cols-[1.2fr_1fr_1fr] gap-5 text-caption">
-      <div>
-        <div className="eyebrow mb-1">Extracted attributes</div>
-        {n && Object.keys(n.attributes).length ? (
-          <table className="w-full">
-            <tbody>
-              {Object.entries(n.attributes).map(([k, a]) => (
-                <tr key={k} className="border-b border-grey-200/70">
-                  <td className="py-1 pr-2 text-grey-500">{humanize(k)}</td>
-                  <td className="py-1 font-mono text-grey-900">{String(a.value)}</td>
-                  <td className="py-1 text-right text-micro text-grey-400">
-                    {a.source} · {(a.confidence * 100).toFixed(0)}%
-                  </td>
+    <Dialog
+      open
+      onClose={onClose}
+      title={
+        <div className="flex items-center gap-2">
+          <span>{data.org.name} Material Record</span>
+          <span className="font-mono text-caption text-primary-800">
+            {data.raw.rawPartNumber ? `MPN: ${data.raw.rawPartNumber}` : ''}
+          </span>
+        </div>
+      }
+      subtitle={`Ingested from ${data.batch?.fileName ?? 'batch'} · ${fmtDateTime(data.raw.ingestedAt)}`}
+      width={780}
+    >
+      <div className="space-y-4 text-dense">
+        {/* Top Header Card */}
+        <div className="rounded-md border border-grey-200 bg-grey-50 p-3">
+          <div className="eyebrow mb-1">Raw ERP Description</div>
+          <div className="font-mono text-dense font-semibold text-grey-900">{data.norm?.cleanedText ?? '—'}</div>
+          {n?.proposedDescription && (
+            <div className="mt-2 border-t border-grey-200 pt-1.5">
+              <div className="eyebrow mb-0.5">Standardised Description (Template)</div>
+              <div className="font-mono text-caption text-primary-800 font-medium">{n.proposedDescription}</div>
+            </div>
+          )}
+        </div>
+
+        {/* Extracted Attributes Table */}
+        <DialogSection title="Extracted Governed Attributes" subtitle="Parsed by domain regex & NLP extractors">
+          {n && Object.keys(n.attributes).length ? (
+            <table className="w-full text-caption">
+              <thead>
+                <tr className="border-b border-grey-200 text-left text-micro uppercase tracking-wider text-grey-500">
+                  <th className="py-1">Attribute</th>
+                  <th className="py-1">Extracted Value</th>
+                  <th className="py-1 text-right">Confidence</th>
                 </tr>
+              </thead>
+              <tbody>
+                {Object.entries(n.attributes).map(([k, a]) => (
+                  <tr key={k} className="border-b border-grey-100">
+                    <td className="py-1.5 font-medium text-grey-700">{humanize(k)}</td>
+                    <td className="py-1.5 font-mono text-grey-900 font-semibold">{String(a.value)}</td>
+                    <td className="py-1.5 text-right font-mono text-micro text-grey-500">
+                      {(a.confidence * 100).toFixed(0)}%
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p className="text-caption text-grey-500">No governed attributes extracted (unclassified or incomplete record).</p>
+          )}
+        </DialogSection>
+
+        {/* Normalization Details */}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <DialogSection title="Abbreviations Expanded">
+            <div className="flex flex-wrap gap-1.5">
+              {n?.expansions.length ? (
+                n.expansions.map((e) => (
+                  <span key={e.term} className="rounded border border-grey-200 bg-white px-2 py-0.5 font-mono text-micro text-grey-800">
+                    <b>{e.term}</b> → {e.expansion}
+                  </span>
+                ))
+              ) : (
+                <span className="text-caption text-grey-400">None</span>
+              )}
+            </div>
+          </DialogSection>
+
+          <DialogSection title="Quality Flags">
+            <div className="flex flex-wrap gap-1.5">
+              {n?.qualityFlags.length ? (
+                n.qualityFlags.map((f) => (
+                  <Badge
+                    key={f}
+                    tone={f.startsWith('MISSING_REQUIRED') || f.startsWith('UOM_DIM') ? 'amber' : 'neutral'}
+                    className="!normal-case font-mono"
+                  >
+                    {f}
+                  </Badge>
+                ))
+              ) : (
+                <span className="text-caption text-grey-400">No quality flags</span>
+              )}
+            </div>
+          </DialogSection>
+        </div>
+
+        {/* Source & Purchase Order Metadata */}
+        <DialogSection title="Source ERP & Purchase History">
+          <div className="grid grid-cols-2 gap-3 text-caption">
+            <div>
+              <span className="text-grey-500">Manufacturer / Make:</span>{' '}
+              <span className="font-mono font-medium text-grey-900">{data.raw.rawManufacturer ?? '—'}</span>
+            </div>
+            <div>
+              <span className="text-grey-500">Material Group:</span>{' '}
+              <span className="font-mono font-medium text-grey-900">{data.raw.rawMaterialGroup ?? '—'}</span>
+            </div>
+            <div>
+              <span className="text-grey-500">Last PO Price:</span>{' '}
+              <span className="font-medium text-grey-900">
+                {data.raw.lastPoPriceInr ? fmtInr(data.raw.lastPoPriceInr, { compact: false }) : 'No history'}
+              </span>
+            </div>
+            <div>
+              <span className="text-grey-500">Annual Procurement Qty:</span>{' '}
+              <span className="font-mono font-medium text-grey-900">{data.raw.annualQty ? `${data.raw.annualQty} units/yr` : '—'}</span>
+            </div>
+          </div>
+        </DialogSection>
+
+        {/* AI Recommendations involving this record */}
+        {data.recommendations.length > 0 && (
+          <DialogSection title="AI Match Recommendations Involving This Record">
+            <div className="space-y-1.5">
+              {data.recommendations.map((r) => (
+                <Link
+                  key={r.id}
+                  href={`/review?tab=${r.vetoed ? 'VETOED' : r.status === 'PENDING' ? 'FULL_REVIEW' : 'DECIDED'}&compare=${r.id}`}
+                  className="flex items-center justify-between rounded border border-grey-200 bg-white p-2 hover:bg-grey-50"
+                  onClick={onClose}
+                >
+                  <div className="flex items-center gap-2">
+                    <MatchTypeBadge type={r.type} vetoed={r.vetoed} />
+                    <ConfidenceMeter score={r.score} vetoed={r.vetoed} width={60} />
+                    <StatusBadge status={r.status} />
+                  </div>
+                  <span className="flex items-center gap-1 text-caption text-teal-700 font-medium">
+                    Inspect in Review Queue <ChevronRight size={13} />
+                  </span>
+                </Link>
               ))}
-            </tbody>
-          </table>
-        ) : (
-          <div className="text-grey-500">No governed attributes (unclassified record).</div>
-        )}
-        {n?.proposedDescription && (
-          <div className="mt-2">
-            <div className="eyebrow mb-0.5">Standardised description (template)</div>
-            <div className="font-mono text-primary-800">{n.proposedDescription}</div>
-          </div>
+            </div>
+          </DialogSection>
         )}
       </div>
-      <div className="space-y-2">
-        <div>
-          <div className="eyebrow mb-0.5">Classifier evidence</div>
-          <ul className="list-disc pl-4 text-grey-700">{n?.classifierReasons.map((r) => <li key={r}>{r}</li>)}</ul>
-        </div>
-        <div>
-          <div className="eyebrow mb-0.5">Abbreviations expanded</div>
-          <div className="flex flex-wrap gap-1">
-            {n?.expansions.length ? n.expansions.map((e) => <span key={e.term} className="rounded-sm border border-grey-200 bg-white px-1 font-mono text-micro">{e.term}→{e.expansion}</span>) : <span className="text-grey-400">none</span>}
-          </div>
-        </div>
-        <div>
-          <div className="eyebrow mb-0.5">Quality flags</div>
-          <div className="flex flex-wrap gap-1">{n?.qualityFlags.map((f) => <Badge key={f} tone={f.startsWith('MISSING_REQUIRED') || f.startsWith('UOM_DIM') ? 'amber' : 'neutral'} className="!normal-case">{f}</Badge>)}</div>
-        </div>
-      </div>
-      <div className="space-y-2">
-        <div>
-          <div className="eyebrow mb-0.5">Source</div>
-          <div className="text-grey-700">
-            {data.org.name} · {data.system?.name} ({data.system?.version})
-          </div>
-          <div className="text-grey-500">
-            {data.batch?.fileName} · ingested {fmtDateTime(data.raw.ingestedAt)}
-          </div>
-          <div className="mt-1 text-grey-700">
-            Make/MPN: <span className="font-mono">{data.raw.rawManufacturer ?? '—'} {data.raw.rawPartNumber ?? ''}</span> · Group <span className="font-mono">{data.raw.rawMaterialGroup ?? '—'}</span>
-          </div>
-          <div className="text-grey-700">Last PO: {data.raw.lastPoPriceInr ? `${fmtInr(data.raw.lastPoPriceInr, { compact: false })}${data.raw.annualQty ? ` × ${data.raw.annualQty}/yr` : ' (qty not provided)'}` : 'no history'}</div>
-          <div className="text-micro text-grey-400">
-            pipeline {n?.pipelineVersion} · {n?.embeddingModel}
-          </div>
-        </div>
-        <div>
-          <div className="eyebrow mb-0.5">AI recommendations involving this record</div>
-          {data.recommendations.length === 0 && <div className="text-grey-500">None — no candidate above the storage threshold.</div>}
-          {data.recommendations.map((r) => (
-            <Link key={r.id} href={`/review?tab=${r.vetoed ? 'VETOED' : r.status === 'PENDING' ? 'FULL_REVIEW' : 'DECIDED'}&id=${r.id}`} className="flex items-center gap-2 py-0.5 hover:underline">
-              <MatchTypeBadge type={r.type} vetoed={r.vetoed} />
-              <ConfidenceMeter score={r.score} vetoed={r.vetoed} width={50} />
-              <StatusBadge status={r.status} />
-              <ChevronRight size={12} className="text-grey-400" />
-            </Link>
-          ))}
-        </div>
-      </div>
-    </div>
+    </Dialog>
   );
 }
 
 function RecordsInner() {
   const params = useSearchParams();
   const batch = params.get('batch');
-  const { data, isLoading } = useQuery({ queryKey: ['records'], queryFn: () => api<{ records: Row[] }>('/api/records') });
+  const catParam = params.get('cat');
+  const { data, isLoading } = useQuery({
+    queryKey: ['records'],
+    queryFn: () => api<{ records: Row[] }>('/api/records'),
+  });
+
   const [q, setQ] = useState('');
   const [org, setOrg] = useState('ALL');
-  const [cat, setCat] = useState('ALL');
+  const [cat, setCat] = useState(catParam ?? 'ALL');
   const [status, setStatus] = useState<'all' | 'mapped' | 'unmapped' | 'pending' | 'insufficient'>('all');
+  const [activeRecordId, setActiveRecordId] = useState<string | null>(null);
 
   const rows = useMemo(() => {
     let r = data?.records ?? [];
@@ -146,21 +250,41 @@ function RecordsInner() {
   }, [data, org, cat, status, batch]);
 
   const orgs = useMemo(() => [...new Set((data?.records ?? []).map((r) => r.org))].sort(), [data]);
+
   const cols = useMemo<ColumnDef<Row>[]>(
     () => [
-      { accessorKey: 'org', header: 'CPSE', size: 70, cell: (c) => <OrgChip code={c.getValue<string>()} /> },
-      { accessorKey: 'legacyCode', header: 'Legacy code', size: 150, cell: (c) => <span className="font-mono text-caption text-primary-800">{c.getValue<string>()}</span> },
+      {
+        accessorKey: 'org',
+        header: 'CPSE',
+        size: 70,
+        cell: (c) => <OrgChip code={c.getValue<string>()} />,
+      },
+      {
+        accessorKey: 'legacyCode',
+        header: 'Legacy code',
+        size: 140,
+        cell: (c) => <span className="font-mono text-caption text-primary-800 font-medium">{c.getValue<string>()}</span>,
+      },
       {
         accessorKey: 'raw',
         header: 'Description (as held in ERP)',
         cell: (c) => (
           <div className="max-w-[360px]">
-            <div className="truncate font-mono text-caption text-grey-900" title={c.row.original.raw}>{c.row.original.raw}</div>
-            <div className="truncate text-micro text-grey-500" title={c.row.original.normalized ?? ''}>{c.row.original.normalized}</div>
+            <div className="truncate font-mono text-caption text-grey-900" title={c.row.original.raw}>
+              {c.row.original.raw}
+            </div>
+            <div className="truncate text-micro text-grey-500" title={c.row.original.normalized ?? ''}>
+              {c.row.original.normalized}
+            </div>
           </div>
         ),
       },
-      { accessorKey: 'category', header: 'Category', size: 90, cell: (c) => (c.getValue<string>() ? <CategoryChip code={c.getValue<string>()} /> : null) },
+      {
+        accessorKey: 'category',
+        header: 'Category',
+        size: 90,
+        cell: (c) => (c.getValue<string>() ? <CategoryChip code={c.getValue<string>()} /> : null),
+      },
       {
         accessorKey: 'uom',
         header: 'UOM',
@@ -171,7 +295,7 @@ function RecordsInner() {
           return (
             <span className="font-mono text-caption">
               {r.uom ?? '—'}
-              {changed && <span className="text-grey-400"> →{r.baseUom}</span>}
+              {changed && <span className="text-grey-400 font-sans"> →{r.baseUom}</span>}
             </span>
           );
         },
@@ -183,7 +307,7 @@ function RecordsInner() {
         meta: { align: 'right' },
         cell: (c) => {
           const v = c.getValue<number | null>() ?? 0;
-          return <span className={cx('tabular', v < 0.6 ? 'text-amber-800' : 'text-grey-700')}>{(v * 100).toFixed(0)}%</span>;
+          return <span className={cx('tabular font-medium', v < 0.6 ? 'text-amber-800' : 'text-grey-700')}>{(v * 100).toFixed(0)}%</span>;
         },
       },
       {
@@ -192,34 +316,61 @@ function RecordsInner() {
         accessorFn: (r) => r.cnmc ?? (r.pendingReviews ? `~pending ${r.pendingReviews}` : '~'),
         cell: (c) => {
           const r = c.row.original;
-          if (r.cnmc)
+          if (r.cnmc) {
             return (
-              <Link onClick={(e) => e.stopPropagation()} href={`/canonical/${r.canonicalId}`} className="block max-w-[260px] truncate font-mono text-micro text-high-700 hover:underline" title={r.cnmc}>
+              <Link
+                onClick={(e) => e.stopPropagation()}
+                href={`/canonical/${r.canonicalId}`}
+                className="block max-w-[240px] truncate font-mono text-micro text-high-700 hover:underline font-semibold"
+                title={r.cnmc}
+              >
                 {r.cnmc}
               </Link>
             );
+          }
           if (r.missing?.length) return <Badge tone="amber">Insufficient data</Badge>;
           if (r.category === 'UNCLASSIFIED') return <Badge tone="neutral">Unclassified</Badge>;
-          if (r.pendingReviews) return <Badge tone="amber">{r.pendingReviews} awaiting review</Badge>;
+          if (r.pendingReviews) return <Badge tone="amber">{r.pendingReviews} in review</Badge>;
           return <span className="text-caption text-grey-400">unique so far</span>;
         },
+      },
+      {
+        id: 'action',
+        header: '',
+        size: 70,
+        cell: (c) => (
+          <button
+            type="button"
+            onClick={() => setActiveRecordId(c.row.original.id)}
+            className="inline-flex items-center gap-1 text-caption text-teal-700 hover:underline"
+          >
+            <Eye size={12} /> Detail
+          </button>
+        ),
       },
     ],
     [],
   );
 
   return (
-    <div>
+    <div className="space-y-3">
       <PageHeader
-        eyebrow="Material data"
+        eyebrow="Material Catalog"
         title="Material records"
-        description="Every legacy record exactly as ingested from each CPSE ERP — untouched — alongside its normalized form, extracted attributes and harmonisation status. Click a row for the full lineage."
+        description="Ingested ERP items with normalized specifications and extracted engineering parameters."
       />
+
       <Panel
-        title={batch ? 'Records in selected batch' : 'All CPSE records'}
+        title={batch ? 'Records in selected batch' : `All CPSE records (${rows.length})`}
         actions={
           <div className="flex items-center gap-2">
-            <input className="input h-7 w-64" placeholder="Filter code / description…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Filter records" />
+            <input
+              className="input h-7 w-60"
+              placeholder="Filter code / description…"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              aria-label="Filter records"
+            />
             <select className="input h-7 w-28" value={org} onChange={(e) => setOrg(e.target.value)} aria-label="CPSE">
               <option value="ALL">All CPSEs</option>
               {orgs.map((o) => (
@@ -251,16 +402,29 @@ function RecordsInner() {
         {isLoading ? (
           <LoadingBar label="Loading records" />
         ) : (
-          <DataTable data={rows} columns={cols} globalFilter={q} getRowId={(r) => r.id} renderExpanded={(r) => <RecordDetail id={r.id} />} pageSize={40} maxHeight="calc(100vh - 290px)" footerNote={batch ? 'filtered to one ingestion batch' : undefined} />
+          <DataTable
+            data={rows}
+            columns={cols}
+            globalFilter={q}
+            getRowId={(r) => r.id}
+            onRowClick={(r) => setActiveRecordId(r.id)}
+            pageSize={40}
+            maxHeight="calc(100vh - 280px)"
+          />
         )}
       </Panel>
+
+      {/* Row-Click Detail Dialog */}
+      {activeRecordId && (
+        <RecordDetailDialog id={activeRecordId} onClose={() => setActiveRecordId(null)} />
+      )}
     </div>
   );
 }
 
 export default function RecordsPage() {
   return (
-    <Suspense fallback={<LoadingBar />}>
+    <Suspense fallback={<LoadingBar label="Loading material records…" />}>
       <RecordsInner />
     </Suspense>
   );

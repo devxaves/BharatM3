@@ -27,7 +27,7 @@ import { ROLE_LABEL, type Role } from '@/lib/governance/roles';
 import { fadeUp, transition } from '@/lib/motion';
 
 const NAV: { group: string; items: { href: string; label: string; icon: ReactNode; badge?: 'pending' }[] }[] = [
-  { group: 'Overview', items: [{ href: '/', label: 'Dashboard', icon: <Gauge size={15} /> }] },
+  { group: 'Overview', items: [{ href: '/dashboard', label: 'Dashboard', icon: <Gauge size={15} /> }] },
   {
     group: 'Material data',
     items: [
@@ -66,16 +66,16 @@ function Mark() {
 
 function Sidebar({ pending }: { pending: number }) {
   const path = usePathname();
-  const active = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+  const active = (href: string) => path === href || (href !== '/dashboard' && path.startsWith(href));
   return (
     <aside className="sticky top-0 z-30 flex h-screen w-sidebar shrink-0 flex-col bg-primary-900 text-primary-100">
-      <div className="flex h-topbar items-center gap-2.5 border-b border-white/10 px-4">
+      <Link href="/" className="flex h-topbar items-center gap-2.5 border-b border-white/10 px-4 hover:bg-white/5 transition-colors">
         <Mark />
         <div className="leading-tight">
           <div className="font-display text-[15px] font-bold tracking-[-0.01em] text-white">BharatM3</div>
           <div className="text-micro uppercase tracking-[0.08em] text-primary-300">National Material Master</div>
         </div>
-      </div>
+      </Link>
       <nav className="scroll-thin flex-1 overflow-y-auto px-2 py-3">
         {NAV.map((g) => (
           <div key={g.group} className="mb-3">
@@ -191,6 +191,12 @@ function GlobalLookup() {
 
 export function AppShell({ children }: { children: ReactNode }) {
   const { session } = useSession();
+  const path = usePathname();
+
+  if (path === '/') {
+    return <main className="min-h-screen bg-grey-25">{children}</main>;
+  }
+
   return (
     <div className="flex min-h-screen">
       <Sidebar pending={session?.pendingReviews ?? 0} />

@@ -2,10 +2,22 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, Check, CircleAlert, Download, FileSpreadsheet, GripVertical, Loader2, RotateCcw, Upload, X } from 'lucide-react';
+import {
+  ArrowRight,
+  Check,
+  CircleAlert,
+  Download,
+  Eye,
+  FileSpreadsheet,
+  GripVertical,
+  Loader2,
+  RotateCcw,
+  Upload,
+  X,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useRef, useState, type DragEvent, type ReactNode } from 'react';
-import { Button, Empty, PageHeader, Panel } from '@/components/ui/primitives';
+import { Button, Dialog, DialogSection, Empty, PageHeader, Panel, SummaryCard } from '@/components/ui/primitives';
 import { Badge, CategoryChip, OrgChip } from '@/components/ui/status';
 import { useToast } from '@/components/ui/toast';
 import { api } from '@/lib/client/api';
@@ -60,7 +72,7 @@ function StepHead({ n, title, done, active, children }: { n: number; title: stri
       >
         {done ? <Check size={13} strokeWidth={3} /> : n}
       </span>
-      <h2 className="text-lead">{title}</h2>
+      <h2 className="text-lead font-display font-semibold text-grey-900">{title}</h2>
       {children}
     </div>
   );
@@ -83,8 +95,9 @@ function ColumnMapper({ parsed, mapping, setMapping }: { parsed: Parsed; mapping
   };
   const sample = (col: string) => parsed.rows.slice(0, 3).map((r) => r[col]).filter(Boolean).join(' · ');
   const unmappedCols = parsed.headers.filter((h) => !mapping[h]);
+
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)] gap-4">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]">
       <div className="min-w-0">
         <div className="eyebrow mb-1.5">Source columns — drag onto a target field</div>
         <div className="space-y-1">
@@ -93,11 +106,11 @@ function ColumnMapper({ parsed, mapping, setMapping }: { parsed: Parsed; mapping
               key={h}
               draggable
               onDragStart={(e) => e.dataTransfer.setData('text/column', h)}
-              className={cx('flex cursor-grab items-center gap-2 rounded border bg-white px-2 py-1.5 active:cursor-grabbing', mapping[h] ? 'border-high-600/30 bg-high-50/40' : 'border-grey-300 hover:border-grey-400')}
+              className={cx('flex cursor-grab items-center gap-2 rounded border bg-white px-2 py-1.5 active:cursor-grabbing text-caption', mapping[h] ? 'border-high-600/30 bg-high-50/40' : 'border-grey-300 hover:border-grey-400')}
             >
               <GripVertical size={13} className="text-grey-400" />
               <div className="min-w-0 flex-1">
-                <div className="text-dense font-medium text-grey-900">{h}</div>
+                <div className="font-medium text-grey-900">{h}</div>
                 <div className="truncate font-mono text-micro text-grey-500">{sample(h) || '—'}</div>
               </div>
               {mapping[h] ? <Badge tone="high">{parsed.targets.find((t) => t.key === mapping[h])?.label}</Badge> : <span className="text-micro text-grey-400">unmapped</span>}
@@ -106,6 +119,7 @@ function ColumnMapper({ parsed, mapping, setMapping }: { parsed: Parsed; mapping
         </div>
         {unmappedCols.length > 0 && <p className="mt-2 text-caption text-grey-500">Unmapped columns are preserved verbatim in raw_payload.</p>}
       </div>
+
       <div className="min-w-0">
         <div className="eyebrow mb-1.5">BharatM3 target schema</div>
         <div className="space-y-1">
@@ -127,7 +141,7 @@ function ColumnMapper({ parsed, mapping, setMapping }: { parsed: Parsed; mapping
               >
                 <div>
                   <div className="text-dense font-medium text-grey-900">
-                    {t.label} {t.required && <span className="text-amber-700">*</span>}
+                    {t.label} {t.required && <span className="text-amber-700 font-bold">*</span>}
                   </div>
                   <div className="text-micro text-grey-500">{t.hint}</div>
                 </div>
@@ -158,86 +172,142 @@ function ColumnMapper({ parsed, mapping, setMapping }: { parsed: Parsed; mapping
   );
 }
 
-function QualityReport({ v }: { v: Validation }) {
+function QualityReportSummary({ v, onViewFull }: { v: Validation; onViewFull: () => void }) {
   return (
     <motion.div {...fadeUp} className="space-y-3">
-      <div className="grid grid-cols-5 gap-2">
-        {[
-          { l: 'Valid rows', v: `${v.valid} / ${v.rows}` },
-          { l: 'Already ingested', v: v.alreadyIngested, note: 'will be skipped (idempotent)' },
-          { l: 'Duplicate codes in file', v: v.inFileDuplicates, warn: v.inFileDuplicates > 0 },
-          { l: 'Insufficient data', v: v.insufficient, warn: v.insufficient > 0, note: 'missing a required attribute' },
-          { l: 'UOM issues', v: v.uomIssues.reduce((s, x) => s + x.count, 0), warn: v.uomIssues.length > 0 },
-        ].map((x) => (
-          <div key={x.l} className={cx('rounded border px-3 py-2', x.warn ? 'border-amber-500/40 bg-amber-50' : 'border-grey-200 bg-white')}>
-            <div className="eyebrow">{x.l}</div>
-            <div className="font-display text-title font-semibold tabular">{x.v}</div>
-            {x.note && <div className="text-micro text-grey-500">{x.note}</div>}
-          </div>
-        ))}
+      {/* Glanceable Summary Cards */}
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-5">
+        <div className="rounded border border-grey-200 bg-white p-3">
+          <div className="eyebrow">Valid Rows</div>
+          <div className="font-display text-title font-bold text-high-700">{v.valid} / {v.rows}</div>
+          <div className="text-micro text-grey-500">Passed schema checks</div>
+        </div>
+
+        <div className="rounded border border-grey-200 bg-white p-3">
+          <div className="eyebrow">Already Ingested</div>
+          <div className="font-display text-title font-bold text-grey-800">{v.alreadyIngested}</div>
+          <div className="text-micro text-grey-500">Will be skipped (idempotent)</div>
+        </div>
+
+        <div className={cx('rounded border p-3', v.inFileDuplicates > 0 ? 'border-amber-400 bg-amber-50' : 'border-grey-200 bg-white')}>
+          <div className="eyebrow">In-file Duplicates</div>
+          <div className="font-display text-title font-bold text-amber-800">{v.inFileDuplicates}</div>
+          <div className="text-micro text-grey-500">Duplicate legacy codes</div>
+        </div>
+
+        <div className={cx('rounded border p-3', v.insufficient > 0 ? 'border-amber-400 bg-amber-50' : 'border-grey-200 bg-white')}>
+          <div className="eyebrow">Insufficient Data</div>
+          <div className="font-display text-title font-bold text-amber-800">{v.insufficient}</div>
+          <div className="text-micro text-grey-500">Missing required field</div>
+        </div>
+
+        <div className={cx('rounded border p-3', v.uomIssues.length > 0 ? 'border-teal-500/40 bg-teal-50/50' : 'border-grey-200 bg-white')}>
+          <div className="eyebrow">UOM Inconsistencies</div>
+          <div className="font-display text-title font-bold text-teal-800">{v.uomIssues.reduce((s, x) => s + x.count, 0)}</div>
+          <div className="text-micro text-grey-500">Non-canonical units</div>
+        </div>
       </div>
-      <div className="grid grid-cols-3 gap-3">
-        <div className="rounded border border-grey-200 bg-white p-3">
-          <div className="eyebrow mb-1.5">Missing fields</div>
-          {Object.entries(v.missing).map(([k, n]) => (
-            <div key={k} className="flex justify-between py-0.5 text-caption">
-              <span className="text-grey-600">{humanize(k.replace(/([A-Z])/g, '_$1'))}</span>
-              <span className={cx('tabular', n > 0 && (k === 'legacyCode' || k === 'description') ? 'font-semibold text-veto-700' : 'text-grey-800')}>{n}</span>
+
+      <div className="flex items-center justify-between rounded-md border border-grey-200 bg-grey-50 px-4 py-2.5">
+        <div className="text-caption text-grey-700">
+          <b>{v.abbreviations.length}</b> abbreviations detected · <b>{Object.keys(v.categories).length}</b> material categories routed
+        </div>
+        <Button size="sm" variant="outline" icon={<Eye size={13} />} onClick={onViewFull}>
+          View full quality report
+        </Button>
+      </div>
+    </motion.div>
+  );
+}
+
+function QualityReportModal({ v, open, onClose }: { v: Validation; open: boolean; onClose: () => void }) {
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      title="Data-Quality & Normalization Report"
+      subtitle={`${v.rows} extract rows evaluated against BharatM3 schemas`}
+      width={760}
+      footer={
+        <Button variant="outline" size="sm" onClick={onClose}>
+          Close report
+        </Button>
+      }
+    >
+      <div className="space-y-4 text-dense">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+          <DialogSection title="Missing Fields">
+            {Object.entries(v.missing).map(([k, n]) => (
+              <div key={k} className="flex justify-between py-0.5 text-caption">
+                <span className="text-grey-600">{humanize(k.replace(/([A-Z])/g, '_$1'))}</span>
+                <span className={cx('tabular font-mono', n > 0 && (k === 'legacyCode' || k === 'description') ? 'font-bold text-veto-700' : 'text-grey-800')}>{n}</span>
+              </div>
+            ))}
+          </DialogSection>
+
+          <DialogSection title={`Abbreviations (${v.abbreviations.length})`}>
+            <div className="flex max-h-36 flex-wrap gap-1 overflow-y-auto">
+              {v.abbreviations.map((a) => (
+                <span key={a.term} className="rounded border border-grey-200 bg-white px-1.5 py-0.5 font-mono text-micro text-grey-800">
+                  {a.term} → {a.expansion} <span className="text-grey-400">×{a.count}</span>
+                </span>
+              ))}
             </div>
-          ))}
-          <div className="eyebrow mb-1 mt-3">Category preview</div>
-          <div className="flex flex-wrap gap-1.5">
+          </DialogSection>
+
+          <DialogSection title="UOM Inconsistencies">
+            {v.uomIssues.length === 0 ? (
+              <div className="text-caption text-grey-500">All units are standard ISO.</div>
+            ) : (
+              <table className="w-full text-caption">
+                <tbody>
+                  {v.uomIssues.map((u) => (
+                    <tr key={u.raw + u.flag} className="border-b border-grey-100">
+                      <td className="py-0.5 font-mono">{u.raw}</td>
+                      <td className="py-0.5 text-grey-500">→ {u.normalizedTo ?? '?'}</td>
+                      <td className="py-0.5 text-right font-mono text-micro text-amber-800">×{u.count}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </DialogSection>
+        </div>
+
+        <DialogSection title="Category Routing Preview">
+          <div className="flex flex-wrap gap-2">
             {Object.entries(v.categories).map(([c, n]) => (
-              <span key={c} className="inline-flex items-center gap-1 text-caption">
-                <CategoryChip code={c} /> {n}
+              <span key={c} className="inline-flex items-center gap-1.5 rounded border border-grey-200 bg-white px-2 py-1 text-caption">
+                <CategoryChip code={c} /> <b className="font-mono">{n} records</b>
               </span>
             ))}
           </div>
-        </div>
-        <div className="rounded border border-grey-200 bg-white p-3">
-          <div className="eyebrow mb-1.5">Abbreviations detected ({v.abbreviations.length})</div>
-          <div className="flex max-h-44 flex-wrap gap-1 overflow-y-auto">
-            {v.abbreviations.map((a) => (
-              <span key={a.term} className="rounded-sm border border-grey-200 px-1.5 py-0.5 font-mono text-micro text-grey-700">
-                {a.term} → {a.expansion} <span className="text-grey-400">×{a.count}</span>
-              </span>
-            ))}
-          </div>
-        </div>
-        <div className="rounded border border-grey-200 bg-white p-3">
-          <div className="eyebrow mb-1.5">UOM inconsistencies</div>
-          {v.uomIssues.length === 0 && <div className="text-caption text-grey-500">All units are canonical.</div>}
-          <table className="w-full text-caption">
+        </DialogSection>
+
+        <DialogSection title="Normalization Sample Preview">
+          <table className="dt">
+            <thead>
+              <tr>
+                <th>Legacy Code</th>
+                <th>Source ERP Description</th>
+                <th>Normalized Result</th>
+                <th>Category</th>
+              </tr>
+            </thead>
             <tbody>
-              {v.uomIssues.map((u) => (
-                <tr key={u.raw + u.flag} className="border-b border-grey-100">
-                  <td className="py-1 font-mono">{u.raw}</td>
-                  <td className="py-1 text-grey-500">→ {u.normalizedTo ?? '?'}</td>
-                  <td className="py-1 font-mono text-micro text-amber-800">{u.flag}</td>
-                  <td className="py-1 text-right tabular">{u.count}</td>
+              {v.samples.map((s) => (
+                <tr key={s.legacyCode}>
+                  <td className="font-mono text-caption text-primary-800 font-semibold">{s.legacyCode}</td>
+                  <td className="font-mono text-caption text-grey-700">{s.description}</td>
+                  <td className="font-mono text-caption font-bold text-grey-900">{s.normalized}</td>
+                  <td><CategoryChip code={s.category} /></td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div>
+        </DialogSection>
       </div>
-      <div className="rounded border border-grey-200 bg-white">
-        <div className="eyebrow border-b border-grey-200 px-3 py-1.5">Normalization preview</div>
-        <table className="dt">
-          <tbody>
-            {v.samples.map((s) => (
-              <tr key={s.legacyCode}>
-                <td className="w-28 font-mono text-caption text-primary-800">{s.legacyCode}</td>
-                <td className="font-mono text-caption text-grey-700">{s.description}</td>
-                <td className="text-grey-400">→</td>
-                <td className="font-mono text-caption text-grey-900">{s.normalized}</td>
-                <td><CategoryChip code={s.category} /></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </motion.div>
+    </Dialog>
   );
 }
 
@@ -271,6 +341,7 @@ function StageRow({ s, st, index }: { s: (typeof STAGES)[number]; st: StageState
         </span>
       );
   }
+
   return (
     <motion.li initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0, transition: { ...transition, delay: index * 0.05 } }} className="relative flex gap-3 pb-4 last:pb-0">
       {index < STAGES.length - 1 && <span className={cx('absolute left-[11px] top-7 h-[calc(100%-22px)] w-0.5 transition-colors duration-300', st.status === 'done' ? 'bg-high-600' : 'bg-grey-200')} />}
@@ -310,15 +381,41 @@ export default function IngestPage() {
   const qc = useQueryClient();
   const toast = useToast();
   const { can } = useSession();
-  const { data: meta } = useQuery({ queryKey: ['batches'], queryFn: () => api<{ batches: { id: string; org: string; fileName: string; rowCount: number; inserted: number; skipped: number; rejected: number; status: string; createdAt: string; createdBy: string | null }[]; organizations: { id: string; code: string; name: string; sector: string }[] }>('/api/ingest/batches') });
+  const { data: meta } = useQuery({
+    queryKey: ['batches'],
+    queryFn: () =>
+      api<{
+        batches: {
+          id: string;
+          org: string;
+          fileName: string;
+          rowCount: number;
+          inserted: number;
+          skipped: number;
+          rejected: number;
+          status: string;
+          createdAt: string;
+          createdBy: string | null;
+        }[];
+        organizations: { id: string; code: string; name: string; sector: string }[];
+      }>('/api/ingest/batches'),
+  });
+
   const [orgId, setOrgId] = useState('');
   const [parsed, setParsed] = useState<Parsed | null>(null);
   const [mapping, setMapping] = useState<Record<string, string>>({});
   const [validation, setValidation] = useState<Validation | null>(null);
-  const [stages, setStages] = useState<Record<StageKey, StageState>>({ ingest: { status: 'idle' }, normalize: { status: 'idle' }, classify: { status: 'idle' }, match: { status: 'idle' } });
+  const [reportModalOpen, setReportModalOpen] = useState(false);
+  const [stages, setStages] = useState<Record<StageKey, StageState>>({
+    ingest: { status: 'idle' },
+    normalize: { status: 'idle' },
+    classify: { status: 'idle' },
+    match: { status: 'idle' },
+  });
   const [batchId, setBatchId] = useState<string | null>(null);
   const [drag, setDrag] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+
   const running = Object.values(stages).some((s) => s.status === 'running');
   const finished = stages.match.status === 'done';
 
@@ -327,7 +424,13 @@ export default function IngestPage() {
     setMapping({});
     setValidation(null);
     setBatchId(null);
-    setStages({ ingest: { status: 'idle' }, normalize: { status: 'idle' }, classify: { status: 'idle' }, match: { status: 'idle' } });
+    setReportModalOpen(false);
+    setStages({
+      ingest: { status: 'idle' },
+      normalize: { status: 'idle' },
+      classify: { status: 'idle' },
+      match: { status: 'idle' },
+    });
   };
 
   const parse = useMutation({
@@ -340,7 +443,9 @@ export default function IngestPage() {
       reset();
       setParsed(p);
       setMapping(p.suggestion);
-      if (!orgId && /IOCL/i.test(p.fileName)) setOrgId(meta?.organizations.find((o) => o.code === 'IOCL')?.id ?? '');
+      if (!orgId && /IOCL/i.test(p.fileName)) {
+        setOrgId(meta?.organizations.find((o) => o.code === 'IOCL')?.id ?? '');
+      }
     },
     onError: (e: Error) => toast({ kind: 'error', title: 'Could not read file', body: e.message }),
   });
@@ -364,7 +469,10 @@ export default function IngestPage() {
     try {
       set('ingest', { status: 'running' });
       const t0 = performance.now();
-      const r = await api<Record<string, unknown> & { batchId: string }>('/api/ingest/commit', { method: 'POST', json: { orgId, fileName: parsed.fileName, mapping, rows: parsed.rows } });
+      const r = await api<Record<string, unknown> & { batchId: string }>('/api/ingest/commit', {
+        method: 'POST',
+        json: { orgId, fileName: parsed.fileName, mapping, rows: parsed.rows },
+      });
       id = r.batchId;
       setBatchId(id);
       set('ingest', { status: 'done', result: r, ms: performance.now() - t0 });
@@ -396,34 +504,43 @@ export default function IngestPage() {
   };
 
   return (
-    <div>
+    <div className="space-y-3">
       <PageHeader
-        eyebrow="Material data"
-        title="Ingest a CPSE material master extract"
-        description="Upload a CSV or Excel extract from any SAP / Oracle / legacy ERP. Map its columns, review data quality, then watch the harmonisation pipeline run stage by stage. Nothing in the source ERP is changed."
+        eyebrow="Data Ingestion"
+        title="Ingest catalog extract"
+        description="Upload CPSE material master extracts (CSV or Excel) to run normalization and matching."
         actions={
-          <>
-            <a href="/samples/IOCL_material_extract.csv" download className="inline-flex h-8 items-center gap-1.5 rounded border border-grey-300 bg-white px-3 text-dense text-grey-800 hover:bg-grey-50">
-              <Download size={14} /> Sample CSV
+          <div className="flex items-center gap-2">
+            <a
+              href="/samples/IOCL_material_extract.csv"
+              download
+              className="inline-flex h-8 items-center gap-1.5 rounded border border-grey-300 bg-white px-3 text-caption font-medium text-grey-800 hover:bg-grey-50 transition-colors"
+            >
+              <Download size={13} /> Sample CSV
             </a>
-            <a href="/samples/IOCL_material_extract.xlsx" download className="inline-flex h-8 items-center gap-1.5 rounded border border-grey-300 bg-white px-3 text-dense text-grey-800 hover:bg-grey-50">
-              <Download size={14} /> Sample XLSX
+            <a
+              href="/samples/IOCL_material_extract.xlsx"
+              download
+              className="inline-flex h-8 items-center gap-1.5 rounded border border-grey-300 bg-white px-3 text-caption font-medium text-grey-800 hover:bg-grey-50 transition-colors"
+            >
+              <Download size={13} /> Sample XLSX
             </a>
-          </>
+          </div>
         }
       />
+
       {!can('ingest:write') && (
         <div className="mb-3 flex items-center gap-2 rounded border border-amber-500/40 bg-amber-50 px-3 py-2 text-dense text-amber-800">
-          <CircleAlert size={15} /> Your current role (auditor) is read-only. Switch to Data Entry, Data Steward or Admin to ingest files.
+          <CircleAlert size={15} /> Your current role is read-only. Switch to Data Entry, Data Steward or Admin to ingest files.
         </div>
       )}
 
       <div className="grid grid-cols-12 gap-3">
-        <div className="col-span-8 min-w-0 space-y-3">
+        <div className="col-span-12 lg:col-span-8 min-w-0 space-y-3">
           <Panel>
             <div className="space-y-3 p-4">
               <StepHead n={1} title="Source organisation & file" done={!!parsed && !!orgId} active />
-              <div className="grid grid-cols-1 gap-3 2xl:grid-cols-[300px_1fr]">
+              <div className="grid grid-cols-1 gap-3 2xl:grid-cols-[280px_1fr]">
                 <div>
                   <label className="field-label" htmlFor="org">CPSE</label>
                   <select id="org" className="input max-w-md" value={orgId} onChange={(e) => setOrgId(e.target.value)}>
@@ -434,8 +551,9 @@ export default function IngestPage() {
                       </option>
                     ))}
                   </select>
-                  <p className="mt-1 text-caption text-grey-500">IOCL is registered but has not contributed data yet — use the sample extract to onboard it.</p>
+                  <p className="mt-1 text-caption text-grey-500">IOCL has not contributed data yet — use the sample extract to onboard it.</p>
                 </div>
+
                 <div
                   onDragOver={(e) => {
                     e.preventDefault();
@@ -443,12 +561,19 @@ export default function IngestPage() {
                   }}
                   onDragLeave={() => setDrag(false)}
                   onDrop={onDrop}
-                  className={cx('flex items-center gap-4 rounded-md border-2 border-dashed px-4 py-3 transition-colors duration-150', drag ? 'border-teal-600 bg-teal-50' : 'border-grey-300 bg-grey-25')}
+                  className={cx(
+                    'flex items-center gap-4 rounded-md border-2 border-dashed px-4 py-3 transition-colors duration-150',
+                    drag ? 'border-teal-600 bg-teal-50' : 'border-grey-300 bg-grey-25',
+                  )}
                 >
                   <FileSpreadsheet size={28} className="text-grey-400" />
-                  <div className="flex-1">
-                    <div className="text-dense font-medium text-grey-900">{parsed ? parsed.fileName : 'Drop a .csv / .xlsx extract here'}</div>
-                    <div className="text-caption text-grey-500">{parsed ? `${parsed.rowCount} rows · ${parsed.headers.length} columns detected` : 'or pick a file — up to 10 MB'}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-dense font-medium text-grey-900 truncate">
+                      {parsed ? parsed.fileName : 'Drop a .csv / .xlsx extract here'}
+                    </div>
+                    <div className="text-caption text-grey-500">
+                      {parsed ? `${parsed.rowCount} rows · ${parsed.headers.length} columns detected` : 'or pick a file — up to 10 MB'}
+                    </div>
                   </div>
                   <input ref={fileRef} type="file" accept=".csv,.xlsx,.xls" className="hidden" onChange={(e) => e.target.files?.[0] && parse.mutate(e.target.files[0])} data-testid="file-input" />
                   <Button size="sm" icon={<Upload size={13} />} onClick={() => fileRef.current?.click()} disabled={!can('ingest:write') || parse.isPending}>
@@ -468,10 +593,10 @@ export default function IngestPage() {
                 <Panel>
                   <div className="space-y-3 p-4">
                     <StepHead n={2} title="Map columns to the target schema" done={requiredMapped} active>
-                      <span className="ml-auto text-caption text-grey-500">Suggested automatically from header names — adjust by drag-and-drop</span>
+                      <span className="ml-auto text-caption text-grey-500">Suggested automatically from header names</span>
                     </StepHead>
                     <ColumnMapper parsed={parsed} mapping={mapping} setMapping={(m) => { setMapping(m); setValidation(null); }} />
-                    <div className="flex justify-end gap-2">
+                    <div className="flex justify-end gap-2 pt-2">
                       <Button variant="ghost" icon={<RotateCcw size={13} />} onClick={reset}>
                         Start over
                       </Button>
@@ -490,8 +615,8 @@ export default function IngestPage() {
               <motion.div {...fadeUp}>
                 <Panel>
                   <div className="space-y-3 p-4">
-                    <StepHead n={3} title="Data-quality preview" done={!!batchId} active />
-                    <QualityReport v={validation} />
+                    <StepHead n={3} title="Data-quality summary" done={!!batchId} active />
+                    <QualityReportSummary v={validation} onViewFull={() => setReportModalOpen(true)} />
                   </div>
                 </Panel>
               </motion.div>
@@ -499,8 +624,8 @@ export default function IngestPage() {
           </AnimatePresence>
         </div>
 
-        <div className="col-span-4 min-w-0 space-y-3">
-          <Panel title="Harmonisation pipeline" subtitle="Each stage is a separate, observable server step">
+        <div className="col-span-12 lg:col-span-4 min-w-0 space-y-3">
+          <Panel title="Harmonisation pipeline" subtitle="Each stage is a separate, observable step">
             <div className="p-4">
               <ol>
                 {STAGES.map((s, i) => (
@@ -514,10 +639,16 @@ export default function IngestPage() {
                   </Button>
                 ) : (
                   <>
-                    <Link href="/review?tab=FULL_REVIEW" className="inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded border border-primary-900 bg-primary-800 px-3 text-dense font-medium text-white hover:bg-primary-900">
+                    <Link
+                      href="/review?tab=FULL_REVIEW"
+                      className="inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded border border-primary-900 bg-primary-800 px-3 text-dense font-medium text-white hover:bg-primary-900"
+                    >
                       Review queue <ArrowRight size={14} />
                     </Link>
-                    <Link href={`/records?batch=${batchId}`} className="inline-flex h-8 flex-1 items-center justify-center rounded border border-grey-300 bg-white px-3 text-dense text-grey-800 hover:bg-grey-50">
+                    <Link
+                      href={`/records?batch=${batchId}`}
+                      className="inline-flex h-8 flex-1 items-center justify-center rounded border border-grey-300 bg-white px-3 text-dense text-grey-800 hover:bg-grey-50"
+                    >
                       View batch records
                     </Link>
                   </>
@@ -541,7 +672,6 @@ export default function IngestPage() {
                 <th className="text-right">Rows</th>
                 <th className="text-right">New</th>
                 <th className="text-right">Skipped</th>
-                <th className="text-right">Rejected</th>
                 <th>Stage reached</th>
                 <th>By</th>
               </tr>
@@ -555,17 +685,25 @@ export default function IngestPage() {
                     <Link href={`/records?batch=${b.id}`} className="font-mono text-caption text-primary-800 hover:underline">{b.fileName}</Link>
                   </td>
                   <td className="tabular text-right">{b.rowCount}</td>
-                  <td className="tabular text-right">{b.inserted}</td>
-                  <td className="tabular text-right">{b.skipped}</td>
-                  <td className="tabular text-right">{b.rejected}</td>
+                  <td className="tabular text-right font-medium text-high-700">{b.inserted}</td>
+                  <td className="tabular text-right text-grey-500">{b.skipped}</td>
                   <td><Badge tone={b.status === 'MATCHED' ? 'high' : 'neutral'}>{humanize(b.status)}</Badge></td>
-                  <td className="text-caption text-grey-600">{b.createdBy}</td>
+                  <td className="text-caption text-grey-600">{b.createdBy ?? 'seed'}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         )}
       </Panel>
+
+      {/* Full Quality Report Dialog */}
+      {validation && (
+        <QualityReportModal
+          v={validation}
+          open={reportModalOpen}
+          onClose={() => setReportModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

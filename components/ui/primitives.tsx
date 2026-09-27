@@ -145,38 +145,87 @@ export function LoadingBar({ label = 'Loading' }: { label?: string }) {
   );
 }
 
-export function Dialog({ open, onClose, title, children, footer, width = 520 }: { open: boolean; onClose: () => void; title: string; children: ReactNode; footer?: ReactNode; width?: number }) {
+export function Dialog({
+  open,
+  onClose,
+  title,
+  subtitle,
+  children,
+  footer,
+  width = 560,
+  className,
+}: {
+  open: boolean;
+  onClose: () => void;
+  title: ReactNode;
+  subtitle?: ReactNode;
+  children: ReactNode;
+  footer?: ReactNode;
+  width?: number | string;
+  className?: string;
+}) {
   useEffect(() => {
     if (!open) return;
     const h = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', h);
     return () => window.removeEventListener('keydown', h);
   }, [open, onClose]);
+
   return (
     <AnimatePresence>
       {open && (
-        <motion.div className="fixed inset-0 z-50 flex items-start justify-center bg-grey-900/35 px-4 pt-[12vh]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={transition} onMouseDown={onClose}>
+        <motion.div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-grey-900/40 p-4 backdrop-blur-[2px]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={transition}
+          onMouseDown={onClose}
+        >
           <motion.div
             role="dialog"
             aria-modal="true"
-            aria-label={title}
-            className="w-full rounded-md border border-grey-200 bg-white shadow-pop"
-            style={{ maxWidth: width }}
+            className={cx(
+              'flex max-h-[90vh] w-full flex-col overflow-hidden rounded-lg border border-grey-200 bg-white shadow-pop',
+              className,
+            )}
+            style={{ maxWidth: typeof width === 'number' ? `${width}px` : width }}
             {...fadeUp}
             onMouseDown={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-grey-200 px-4 py-3">
-              <h3 className="text-lead">{title}</h3>
-              <button onClick={onClose} className="rounded p-1 text-grey-500 hover:bg-grey-100" aria-label="Close">
+            <div className="flex items-start justify-between border-b border-grey-200 px-5 py-3.5 bg-grey-25/50">
+              <div className="min-w-0 pr-4">
+                <h3 className="text-lead font-display font-semibold text-grey-900">{title}</h3>
+                {subtitle && <p className="mt-0.5 text-caption text-grey-500">{subtitle}</p>}
+              </div>
+              <button
+                onClick={onClose}
+                className="mt-0.5 rounded-md p-1.5 text-grey-400 hover:bg-grey-100 hover:text-grey-700 transition-colors"
+                aria-label="Close dialog"
+              >
                 <X size={16} />
               </button>
             </div>
-            <div className="px-4 py-4">{children}</div>
-            {footer && <div className="flex justify-end gap-2 border-t border-grey-200 bg-grey-25 px-4 py-3">{footer}</div>}
+            <div className="scroll-thin flex-1 overflow-y-auto px-5 py-4">{children}</div>
+            {footer && <div className="flex shrink-0 justify-end gap-2 border-t border-grey-200 bg-grey-25 px-5 py-3">{footer}</div>}
           </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
+  );
+}
+
+export function DialogSection({ title, subtitle, children, className }: { title?: ReactNode; subtitle?: ReactNode; children: ReactNode; className?: string }) {
+  return (
+    <div className={cx('space-y-2 rounded-md border border-grey-200 bg-grey-25/40 p-3.5', className)}>
+      {title && (
+        <div className="border-b border-grey-200/80 pb-1.5">
+          <div className="eyebrow !text-grey-600 font-semibold">{title}</div>
+          {subtitle && <div className="text-micro text-grey-500">{subtitle}</div>}
+        </div>
+      )}
+      <div>{children}</div>
+    </div>
   );
 }
 
@@ -187,5 +236,67 @@ export function Stat({ label, value, hint }: { label: string; value: ReactNode; 
       <div className="mt-0.5 font-display text-lead font-semibold text-grey-900">{value}</div>
       {hint && <div className="text-caption text-grey-500">{hint}</div>}
     </div>
+  );
+}
+
+export function SummaryCard({
+  label,
+  value,
+  hint,
+  tone,
+  icon,
+  onClick,
+  active,
+  className,
+}: {
+  label: string;
+  value: ReactNode;
+  hint?: ReactNode;
+  tone?: 'amber' | 'veto' | 'high' | 'teal' | 'neutral';
+  icon?: ReactNode;
+  onClick?: () => void;
+  active?: boolean;
+  className?: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cx(
+        'group relative flex w-full flex-col justify-between rounded-md border p-3 text-left transition-all duration-150',
+        onClick ? 'cursor-pointer hover:border-grey-400 hover:shadow-panel active:translate-y-px' : 'cursor-default',
+        active ? 'border-teal-600 ring-2 ring-teal-600/15 bg-white' : 'border-grey-200 bg-white shadow-panel',
+        className,
+      )}
+    >
+      <div className="flex w-full items-center justify-between gap-1">
+        <span className="eyebrow truncate">{label}</span>
+        {icon && (
+          <span
+            className={cx(
+              'shrink-0 text-caption',
+              tone === 'amber' ? 'text-amber-600' : tone === 'veto' ? 'text-veto-600' : tone === 'high' ? 'text-high-600' : tone === 'teal' ? 'text-teal-600' : 'text-grey-400',
+            )}
+          >
+            {icon}
+          </span>
+        )}
+      </div>
+      <div
+        className={cx(
+          'mt-1 font-display text-display font-semibold tabular',
+          tone === 'amber' ? 'text-amber-800' : tone === 'veto' ? 'text-veto-700' : tone === 'high' ? 'text-high-700' : 'text-grey-900',
+        )}
+      >
+        {value}
+      </div>
+      {hint && <div className="mt-1 line-clamp-1 text-caption text-grey-500">{hint}</div>}
+      {onClick && (
+        <div className="mt-2 flex items-center justify-between border-t border-grey-100 pt-1.5 text-micro font-medium text-teal-700 opacity-80 group-hover:opacity-100">
+          <span>Click for breakdown</span>
+          <span>→</span>
+        </div>
+      )}
+    </button>
   );
 }
