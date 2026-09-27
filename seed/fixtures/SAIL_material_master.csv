@@ -1,0 +1,122 @@
+legacy_code,description,long_text,uom,manufacturer,part_number,material_group,last_po_price_inr,annual_qty
+5106030020,Ball Bearing 6205 2RS C3,,NOS,,,31-BRG,490,50
+5106030038,Deep Groove Ball Bearing 6205 ZZ C3,,PCS,,,31-BRG,404,75
+5106030062,Deep Groove Ball Bearing 6205 C3 Make NBC,,PCS,NBC,6205 C3,31-BRG,,
+5106030068,Ball Bearing 6206 2RS C3,,NOS,,,31-BRG,554,40
+5106030072,Deep Groove Ball Bearing 6206 ZZ C3,,PC,,,31-BRG,,
+5106030098,Deep Groove Ball Bearing 6207 2RS C3 Make SKF,,NOS,SKF,6207-2RSH/C3,31-BRG,,
+5106030135,Deep Groove Ball Bearing 6207 2RS C3 Make NBC,,PCS,NBC,6207 2RS C3,31-BRG,,
+5106030142,Ball Bearing 6208 ZZ C3 Make TIMKEN,,NOS,TIMKEN,6208 ZZ C3,31-BRG,959,43
+5106030153,Deep Groove Ball Bearing 6208 2RS C3 Make SKF,,PCS,SKF,6208-2RSH/C3,31-BRG,,
+5106030178,Deep Groove Ball Bearing 6209 C3,,NOS,,,31-BRG,969,52
+5106030189,Deep Groove Ball Bearing 6210 2RS C3 Make NSK,,NOS,NSK,6210DDUC3,31-BRG,1302,75
+5106030192,Deep Groove Ball Bearing 6305 ZZ C3 Make SKF,,PCS,SKF,6305-2Z/C3,31-BRG,752,74
+5106030200,Ball Bearing 6306 2RS C3 Make FAG,,NOS,FAG,6306-2RSR-C3,31-BRG,850,55
+5106030235,Ball Bearing 6306 2RS C3,,NOS,,,31-BRG,,
+5106030247,Ball Bearing 6307 C3 Make FAG,,NOS,FAG,6307-C3,31-BRG,,
+5106030266,Deep Groove Ball Bearing 6310 Make NBC,,PCS,NBC,6310 C3,31-BRG,2664,42
+5106030275,Deep Groove Ball Bearing 6310 ZZ C3 Make NSK,,PC,NSK,6310ZZC3,31-BRG,2133,55
+5106030277,Ball Bearing 6310 ZZ C3,,PCS,,,31-BRG,,
+5106030308,Deep Groove Ball Bearing 6312 C3 Make NBC,,PC,NBC,6312 C3,31-BRG,4351,47
+5106030318,Cylindrical Roller Bearing NU206 C3 Make SKF,,PC,SKF,NU206 ECP/C3,31-BRG,2199,56
+5106030355,Cylindrical Roller Bearing NU310,,PCS,,,31-BRG,,
+5106030379,Cylindrical Roller Bearing NU312,,NOS,,,31-BRG,,
+5106030396,Cylindrical Roller Bearing NU312,,NOS,,,31-BRG,,
+5106030425,Spherical Roller Bearing 22212 C3,,PCS,,,31-BRG,,
+5106030434,Spherical Roller Bearing 22216 C3 Make FAG,,PCS,FAG,22216-E1-XL-C3,31-BRG,,
+5106030450,Spherical Roller Bearing 22312 C3 Make TIMKEN,,PCS,TIMKEN,22312,31-BRG,28583,31
+5106030457,Spherical Roller Bearing 22312 C3,,NOS,,,31-BRG,,
+5106030478,Taper Roller Bearing 30205 Make NBC,,PC,NBC,30205,31-BRG,917,80
+5106030486,Taper Roller Bearing 30205 Make NBC,,PC,NBC,30205,31-BRG,,
+5106030511,Taper Roller Bearing 30208,,PC,,,31-BRG,,
+5106030547,Taper Roller Bearing 30210 Make SKF,,PCS,SKF,30210 J2/Q,31-BRG,2420,35
+5106030548,Angular Contact Ball Bearing 7205,,PCS,,,31-BRG,2396,50
+5106030561,Angular Contact Ball Bearing 7310 Make SKF,,PCS,SKF,7310 BECBP,31-BRG,7279,78
+5106030571,"Gate Valve 2"" 150# CS Flanged RF",,PC,,,44-VLV,,
+5106030604,"Gate Valve 3"" 150# WCB Flanged RF",,PC,,,44-VLV,,
+5106030623,"Gate Valve 4"" 150# WCB Flanged RF",,NOS,,,44-VLV,,
+5106030651,"Gate Valve 6"" 150# CS Flanged RF",,PC,,,44-VLV,,
+5106030685,"Gate Valve 8"" 150# WCB Flanged RF",,PC,,,44-VLV,122687,9
+5106030692,"Gate Valve 6"" 300# WCB Flanged RF",,NOS,,,44-VLV,,
+5106030703,"Gate Valve 1/2"" 800# A105 socket weld",,NOS,,,44-VLV,2490,17
+5106030732,"Gate Valve 3/4"" 800# FORGED STEEL socket weld",,NOS,,,44-VLV,3251,13
+5106030761,"Gate Valve 1"" 800# FORGED STEEL socket weld",,PC,,,44-VLV,,
+5106030797,"Gate Valve 1-1/2"" 800# FORGED STEEL socket weld",,NOS,,,44-VLV,,
+5106030813,"Gate Valve 1"" 800# FORGED STEEL screwed npt",,PC,,,44-VLV,,
+5106030849,"Gate Valve 1"" 800# F316 socket weld",,NOS,,,44-VLV,9489,17
+5106030859,"Globe Valve 2"" 150# WCB Flanged RF",,NOS,,,44-VLV,24933,15
+5106030878,"Globe Valve 3"" 150# WCB Flanged RF",,NOS,,,44-VLV,44378,13
+5106030908,"Globe Valve 3"" 150# WCB Flanged RF",,NOS,,,44-VLV,,
+5106030916,"Globe Valve 2"" 300# WCB Flanged RF",,NOS,,,44-VLV,39004,8
+5106030947,"Ball Valve 1"" 150# SS316 Flanged RF",,NOS,,,44-VLV,16491,22
+5106030978,"Ball Valve 2"" 150# SS316 Flanged RF",,NOS,,,44-VLV,,
+5106031009,"Ball Valve 3"" 150# CF8M Flanged RF",,PC,,,44-VLV,,
+5106031038,"Ball Valve 2"" 150# CF8 Flanged RF",,NOS,,,44-VLV,27361,8
+5106031057,"Ball Valve 3"" 300# WCB Flanged RF",,PC,,,44-VLV,,
+5106031064,"Check Valve 2"" 150# CS Flanged RF",,NOS,,,44-VLV,19692,13
+5106031065,"Check Valve 4"" 150# WCB Flanged RF",,NOS,,,44-VLV,36717,11
+5106031091,"Check Valve 4"" 150# WCB Flanged RF",,NOS,,,44-VLV,,
+5106031116,"Check Valve 6"" 150# CS Flanged RF",,PC,,,44-VLV,,
+5106031134,"Check Valve 4"" 300# WCB Flanged RF",,NOS,,,44-VLV,46737,22
+5106031154,"Butterfly Valve 6"" 150# DI wafer type",,PC,,,44-VLV,23961,16
+5106031186,"Butterfly Valve 10"" 150# DI wafer type",,PC,,,44-VLV,42196,18
+5106031189,"Butterfly Valve 12"" 150# DI wafer type",,NOS,,,44-VLV,57592,11
+5106031205,"Butterfly Valve 12"" 150# DI wafer type",,NOS,,,44-VLV,,
+5106031238,LT Power Cable 3.5 Core 35 sqmm Al XLPE Armoured,,MTR,,,52-CBL,,
+5106031244,LT Power Cable 3.5 Core 50 sqmm Al XLPE Armoured,,M,,,52-CBL,376,1528
+5106031264,LT Power Cable 3.5 Core 70 sqmm Al XLPE Armoured,,MTR,,,52-CBL,424,1300
+5106031290,LT Power Cable 3.5 Core 70 sqmm Al XLPE Armoured,,MTR,,,52-CBL,,
+5106031327,LT Power Cable 3.5 Core 95 sqmm Al XLPE Armoured,,M,,,52-CBL,,
+5106031359,LT Power Cable 3.5 Core 120 sqmm Al XLPE Armoured,,MTR,,,52-CBL,,
+5106031369,LT Power Cable 3.5 Core 185 sqmm Al XLPE Armoured,,M,,,52-CBL,919,1340
+5106031400,LT Power Cable 3.5 Core 240 sqmm Al XLPE Armoured,,MTR,,,52-CBL,,
+5106031429,LT Power Cable 3.5 Core 300 sqmm Al XLPE Armoured,,MTR,,,52-CBL,1474,1292
+5106031441,LT Power Cable 4 Core 2.5 sqmm Cu XLPE Armoured,,M,,,52-CBL,,
+5106031460,LT Power Cable 4 Core 4 sqmm Cu XLPE Armoured,,M,,,52-CBL,,
+5106031481,LT Power Cable 4 Core 6 sqmm Cu XLPE Armoured,,MTR,,,52-CBL,,
+5106031496,LT Power Cable 4 Core 6 sqmm Cu XLPE Armoured,,M,,,52-CBL,,
+5106031508,LT Power Cable 4 Core 10 sqmm Cu XLPE Armoured,,M,,,52-CBL,369,1292
+5106031516,LT Power Cable 4 Core 16 sqmm Cu XLPE Armoured,,M,,,52-CBL,,
+5106031533,LT Power Cable 4 Core 16 sqmm Al XLPE Armoured,,M,,,52-CBL,224,680
+5106031548,LT Power Cable 4 Core 16 sqmm Al XLPE Armoured,,M,,,52-CBL,,
+5106031578,HT 11KV Power Cable 3 Core 95 sqmm Al XLPE Armoured,,M,,,52-CBL,,
+5106031615,HT 11KV Power Cable 3 Core 300 sqmm Al XLPE Armoured,,M,,,52-CBL,,
+5106031632,HT 6.6KV Power Cable 3 Core 185 sqmm Al XLPE Armoured,,MTR,,,52-CBL,1577,1143
+5106031665,HT 6.6KV Power Cable 3 Core 240 sqmm Al XLPE Armoured,,MTR,,,52-CBL,1956,1098
+5106031683,Control Cable 4 Core 1.5 sqmm Cu PVC Armoured FRLS,,MTR,,,52-CBL,89,1464
+5106031718,Control Cable 7 Core 1.5 sqmm Cu PVC Armoured FRLS,,M,,,52-CBL,145,675
+5106031736,Control Cable 12 Core 1.5 sqmm Cu PVC Armoured FRLS,,M,,,52-CBL,,
+5106031754,Control Cable 19 Core 1.5 sqmm Cu PVC Armoured FRLS,,MTR,,,52-CBL,,
+5106031755,Control Cable 4 Core 2.5 sqmm Cu PVC Armoured FRLS,,M,,,52-CBL,108,1420
+5106031773,Control Cable 12 Core 2.5 sqmm Cu PVC Armoured FRLS,,MTR,,,52-CBL,324,441
+5106031781,Hex Bolt M12x50 8.8 Gr. Galv.,,NOS,,,38-FST,16,1332
+5106031791,Hex Bolt M16x60 8.8 Gr. Galv.,,NOS,,,38-FST,,
+5106031793,Hex Bolt M16x80 8.8 Gr. Galv.,,NOS,,,38-FST,43,1505
+5106031818,Hex Bolt M20x100 8.8 Gr. Galv.,,NOS,,,38-FST,91,2427
+5106031833,Hex Bolt M16x80 8.8 Gr. Zinc Plated,,KG,,,38-FST,,
+5106031846,Hex Bolt M12x50 SS304,,KG,,,38-FST,56,2424
+5106031873,"Stud Bolt 5/8"" x 90mm B7 with nuts",,SET,,,38-FST,,
+5106031878,"Stud Bolt 5/8"" x 110mm B7 with nuts",,SET,,,38-FST,78,1865
+5106031884,"Stud Bolt 5/8"" x 110mm B7 with nuts",,NOS,,,38-FST,,
+5106031888,"Stud Bolt 3/4"" x 110mm B7 with nuts",,NOS,,,38-FST,139,1992
+5106031911,"Stud Bolt 3/4"" x 130mm B7 with nuts",,NOS,,,38-FST,,
+5106031938,"Stud Bolt 7/8"" x 150mm B7 with nuts",,SET,,,38-FST,,
+5106031949,Stud Bolt M16 x 110mm B7 with nuts,,NOS,,,38-FST,90,691
+5106031958,Hex Nut M16 Gr.8 Galv.,,KG,,,38-FST,10,2291
+5106031959,Hex Nut M24 Gr.10 Galv.,,KG,,,38-FST,32,1673
+5106031984,Centrifugal Pump 417 LPM 32m Head 7HP TEFC SS316,,SET,KSB,,41-PMP,,
+5106031997,Centrifugal Pump 833 LPM 40m Head 10HP Flameproof CI,,SET,,,41-PMP,138792,3
+5106032003,Centrifugal Pump 833 LPM 40m Head 10HP TEFC CI,,NOS,,,41-PMP,102938,3
+5106032025,Centrifugal Pump 833 LPM 40m Head 10HP TEFC SS316,,NOS,,,41-PMP,188172,3
+5106032029,Centrifugal Pump 3333 LPM 40m Head 50HP TEFC CI,,SET,WPIL,,41-PMP,,
+5106032030,Centrifugal Pump 2500 LPM 80m Head 74HP Flameproof CS,,NOS,FLOWSERVE,,41-PMP,,
+5106032056,Submersible Pump 1667 LPM 50m Head 29HP TEFC CI,,NOS,,,41-PMP,,
+5106032089,Submersible Pump 3333 LPM 60m Head 60HP TEFC CI,,SET,KSB,,41-PMP,529839,2
+5106032106,Ball Bearing for motor NDE side,,NOS,,,MISC,,
+5106032123,"Ball Valve 2""",,NOS,,,MISC,,
+5106032152,Power Cable 95 sqmm,,MTR,,,MISC,,
+5106032174,Stud bolt with nuts as reqd,,KG,,,MISC,,
+5106032207,Dewatering Pump Submersible 22 KW,,SET,,,MISC,,
+5106032236,V-Belt B-54,,NOS,,,MISC,,
+5106032260,Impeller for pump KSB ETA 50-200,,NOS,,,MISC,,
+5106032289,Safety Helmet ISI marked,,NOS,,,MISC,,

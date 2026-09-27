@@ -1,0 +1,74 @@
+/*
+ * BharatM3 design tokens — the ONLY place raw colour values live.
+ * Colours are stored as space-separated RGB channels so Tailwind can apply alpha.
+ * PRD §8.1: deep navy (structure) · muted teal (secondary / AI-derived signals)
+ * · white + light-grey neutrals · amber (attention / AI suggestion awaiting a human)
+ * · semantic confidence colours (high / medium / veto).
+ */
+:root {
+  /* Primary — deep navy */
+  --c-primary-950: 5 20 38;
+  --c-primary-900: 11 37 69;    /* #0B2545 */
+  --c-primary-800: 18 52 92;    /* #12345C */
+  --c-primary-700: 29 70 116;
+  --c-primary-600: 43 90 142;
+  --c-primary-500: 70 117 166;
+  --c-primary-300: 150 178 210;
+  --c-primary-200: 196 212 231;
+  --c-primary-100: 226 234 244;
+  --c-primary-50: 242 246 251;
+
+  /* Secondary — muted teal */
+  --c-teal-800: 9 78 78;
+  --c-teal-700: 11 99 98;
+  --c-teal-600: 14 124 123;     /* #0E7C7B */
+  --c-teal-500: 18 116 117;     /* #127475 */
+  --c-teal-400: 64 157 154;
+  --c-teal-200: 172 216 212;
+  --c-teal-100: 216 238 235;
+  --c-teal-50: 238 247 246;
+
+  /* Neutrals */
+  --c-white: 255 255 255;
+  --c-grey-25: 251 252 253;
+  --c-grey-50: 245 247 249;
+  --c-grey-100: 236 240 244;
+  --c-grey-200: 222 227 233;
+  --c-grey-300: 199 207 216;
+  --c-grey-400: 152 164 178;
+  --c-grey-500: 107 119 134;
+  --c-grey-600: 76 87 101;
+  --c-grey-700: 52 62 75;
+  --c-grey-800: 33 41 52;
+  --c-grey-900: 20 27 36;
+
+  /* Amber — attention & AI suggestions awaiting judgement ONLY */
+  --c-amber-800: 120 76 10;
+  --c-amber-700: 146 94 16;
+  --c-amber-600: 183 121 31;
+  --c-amber-500: 214 158 46;
+  --c-amber-200: 245 222 170;
+  --c-amber-100: 252 241 214;
+  --c-amber-50: 254 249 237;
+
+  /* Semantic confidence */
+  --c-high-700: 22 110 86;
+  --c-high-600: 31 138 110;
+  --c-high-100: 219 241 233;
+  --c-high-50: 238 249 245;
+  --c-veto-700: 150 52 45;
+  --c-veto-600: 180 70 60;
+  --c-veto-100: 248 226 223;
+  --c-veto-50: 252 242 240;
+
+  /* Radii / shadow */
+  --radius-sm: 3px;
+  --radius-md: 5px;
+  --radius-lg: 8px;
+  --shadow-panel: 0 1px 0 rgb(var(--c-grey-200)), 0 1px 3px rgb(var(--c-grey-900) / 0.04);
+  --shadow-pop: 0 8px 24px rgb(var(--c-grey-900) / 0.14), 0 1px 3px rgb(var(--c-grey-900) / 0.08);
+
+  /* Layout */
+  --sidebar-w: 232px;
+  --topbar-h: 52px;
+}
