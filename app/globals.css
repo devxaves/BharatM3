@@ -10,10 +10,13 @@
     text-rendering: optimizeLegibility;
   }
   body {
-    @apply bg-grey-50 font-sans text-body text-grey-800;
+    @apply bg-grey-50 font-sans text-body text-grey-800 antialiased;
   }
   h1, h2, h3, h4 {
-    @apply font-display font-semibold text-grey-900;
+    @apply font-display font-bold text-grey-900 tracking-tight;
+  }
+  h1 {
+    @apply font-extrabold tracking-tight;
   }
   ::selection {
     @apply bg-teal-200 text-grey-900;
@@ -31,19 +34,19 @@
   .tabular { font-variant-numeric: tabular-nums; }
 
   .panel {
-    @apply rounded-md border border-grey-200 bg-white shadow-panel;
+    @apply rounded-lg border border-grey-200/90 bg-white shadow-panel;
   }
   .panel-header {
-    @apply flex items-center justify-between gap-3 border-b border-grey-200 px-4 py-2.5;
+    @apply flex items-center justify-between gap-3 border-b border-grey-200/80 px-4 py-3;
   }
   .panel-title {
-    @apply font-display text-caption font-semibold uppercase tracking-[0.06em] text-grey-600;
+    @apply font-display text-caption font-bold uppercase tracking-[0.08em] text-grey-700;
   }
   .eyebrow {
-    @apply text-micro font-semibold uppercase tracking-[0.08em] text-grey-500;
+    @apply text-micro font-bold uppercase tracking-[0.09em] text-grey-500;
   }
   .code {
-    @apply font-mono text-caption text-primary-800;
+    @apply font-mono text-caption text-primary-800 font-semibold;
   }
   .field-label {
     @apply mb-1 block text-caption font-medium text-grey-700;

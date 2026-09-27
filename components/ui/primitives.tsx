@@ -61,9 +61,9 @@ export function PageHeader({ eyebrow, title, description, actions }: { eyebrow?:
   return (
     <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
       <div className="min-w-0 max-w-3xl">
-        {eyebrow && <div className="eyebrow mb-1">{eyebrow}</div>}
-        <h1 className="text-display">{title}</h1>
-        {description && <p className="mt-1.5 text-body text-grey-600">{description}</p>}
+        {eyebrow && <div className="eyebrow mb-1.5">{eyebrow}</div>}
+        <h1 className="font-display text-display font-extrabold tracking-tight text-grey-900 sm:text-hero">{title}</h1>
+        {description && <p className="mt-1 text-body text-grey-600 leading-relaxed font-normal">{description}</p>}
       </div>
       {actions && <div className="flex items-center gap-2">{actions}</div>}
     </div>
@@ -229,12 +229,12 @@ export function DialogSection({ title, subtitle, children, className }: { title?
   );
 }
 
-export function Stat({ label, value, hint }: { label: string; value: ReactNode; hint?: ReactNode }) {
+export function Stat({ label, value, hint, className }: { label: string; value: ReactNode; hint?: ReactNode; className?: string }) {
   return (
-    <div>
-      <div className="eyebrow">{label}</div>
-      <div className="mt-0.5 font-display text-lead font-semibold text-grey-900">{value}</div>
-      {hint && <div className="text-caption text-grey-500">{hint}</div>}
+    <div className={className}>
+      <div className="eyebrow !text-grey-500 font-bold tracking-wider">{label}</div>
+      <div className="mt-1 font-display text-lead font-bold text-grey-900 tracking-tight tabular">{value}</div>
+      {hint && <div className="mt-0.5 text-caption text-grey-500 font-normal">{hint}</div>}
     </div>
   );
 }
@@ -258,43 +258,69 @@ export function SummaryCard({
   active?: boolean;
   className?: string;
 }) {
+  const iconToneCls =
+    tone === 'amber'
+      ? 'bg-amber-50 text-amber-700 border-amber-200/80'
+      : tone === 'veto'
+        ? 'bg-veto-50 text-veto-700 border-veto-200/80'
+        : tone === 'high'
+          ? 'bg-high-50 text-high-700 border-high-200/80'
+          : tone === 'teal'
+            ? 'bg-teal-50 text-teal-700 border-teal-200/80'
+            : 'bg-primary-50 text-primary-800 border-primary-100';
+
+  const topAccentCls =
+    tone === 'amber'
+      ? 'border-t-2 border-t-amber-500'
+      : tone === 'veto'
+        ? 'border-t-2 border-t-veto-600'
+        : tone === 'high'
+          ? 'border-t-2 border-t-high-600'
+          : tone === 'teal'
+            ? 'border-t-2 border-t-teal-600'
+            : 'border-t-2 border-t-primary-800';
+
   return (
     <button
       type="button"
       onClick={onClick}
       className={cx(
-        'group relative flex w-full flex-col justify-between rounded-md border p-3 text-left transition-all duration-150',
-        onClick ? 'cursor-pointer hover:border-grey-400 hover:shadow-panel active:translate-y-px' : 'cursor-default',
-        active ? 'border-teal-600 ring-2 ring-teal-600/15 bg-white' : 'border-grey-200 bg-white shadow-panel',
+        'group relative flex w-full flex-col justify-between rounded-lg border p-3.5 text-left transition-all duration-200',
+        topAccentCls,
+        onClick ? 'cursor-pointer hover:border-grey-300 hover:shadow-card-hover hover:-translate-y-0.5 active:translate-y-0' : 'cursor-default',
+        active ? 'border-teal-600 ring-2 ring-teal-600/20 bg-white' : 'border-grey-200/90 bg-white shadow-panel',
         className,
       )}
     >
-      <div className="flex w-full items-center justify-between gap-1">
-        <span className="eyebrow truncate">{label}</span>
+      <div className="flex w-full items-center justify-between gap-1.5">
+        <span className="eyebrow truncate font-bold text-grey-600 tracking-wider">{label}</span>
         {icon && (
-          <span
-            className={cx(
-              'shrink-0 text-caption',
-              tone === 'amber' ? 'text-amber-600' : tone === 'veto' ? 'text-veto-600' : tone === 'high' ? 'text-high-600' : tone === 'teal' ? 'text-teal-600' : 'text-grey-400',
-            )}
-          >
+          <span className={cx('flex h-6 w-6 shrink-0 items-center justify-center rounded border text-caption shadow-sm', iconToneCls)}>
             {icon}
           </span>
         )}
       </div>
       <div
         className={cx(
-          'mt-1 font-display text-display font-semibold tabular',
-          tone === 'amber' ? 'text-amber-800' : tone === 'veto' ? 'text-veto-700' : tone === 'high' ? 'text-high-700' : 'text-grey-900',
+          'mt-2.5 font-display text-display font-extrabold tracking-tight tabular',
+          tone === 'amber'
+            ? 'text-amber-800'
+            : tone === 'veto'
+              ? 'text-veto-700'
+              : tone === 'high'
+                ? 'text-high-700'
+                : tone === 'teal'
+                  ? 'text-teal-800'
+                  : 'text-grey-900',
         )}
       >
         {value}
       </div>
-      {hint && <div className="mt-1 line-clamp-1 text-caption text-grey-500">{hint}</div>}
+      {hint && <div className="mt-1 line-clamp-1 text-caption text-grey-500 font-normal">{hint}</div>}
       {onClick && (
-        <div className="mt-2 flex items-center justify-between border-t border-grey-100 pt-1.5 text-micro font-medium text-teal-700 opacity-80 group-hover:opacity-100">
-          <span>Click for breakdown</span>
-          <span>→</span>
+        <div className="mt-3 flex items-center justify-between border-t border-grey-100 pt-2 text-micro font-semibold text-teal-700">
+          <span>Drilldown</span>
+          <span className="transition-transform duration-150 group-hover:translate-x-1">→</span>
         </div>
       )}
     </button>

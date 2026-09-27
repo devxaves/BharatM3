@@ -178,22 +178,22 @@ export default function LandingPage() {
                 SIH PS 26099 · Ministry of Petroleum & Natural Gas
               </div>
 
-              <h1 className="font-display text-4xl font-bold tracking-tight text-primary-950 sm:text-5xl leading-[1.1]">
+              <h1 className="font-display text-4xl font-extrabold tracking-tight text-primary-950 sm:text-5xl lg:text-[54px] leading-[1.08]">
                 One Nation, One Material Code for Indian CPSEs
               </h1>
 
-              <p className="mt-4 max-w-xl text-lead font-medium text-primary-800">
+              <p className="mt-4 max-w-xl text-lead font-semibold text-primary-900">
                 AI recommends. Domain experts approve. Every legacy code remains traceable.
               </p>
 
-              <p className="mt-2 max-w-xl text-body text-grey-600">
+              <p className="mt-2 max-w-xl text-body text-grey-600 leading-relaxed font-normal">
                 BharatM3 eliminates duplicate material codes across public sector enterprises through explainable matching, safety-critical exclusion vetoes, and zero-disruption ERP synchronization.
               </p>
 
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 <Link
                   href="/dashboard"
-                  className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-primary-800 px-5 text-dense font-medium text-white shadow-sm hover:bg-primary-900 active:translate-y-px transition-all"
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-primary-800 px-5 text-dense font-semibold text-white shadow-sm hover:bg-primary-900 active:translate-y-px transition-all"
                 >
                   View Live Dashboard <ArrowRight size={14} />
                 </Link>
@@ -289,7 +289,7 @@ export default function LandingPage() {
       <section id="problem" className="border-b border-grey-200 bg-grey-50 py-12">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="max-w-2xl">
-            <h2 className="font-display text-2xl font-bold tracking-tight text-primary-950 sm:text-3xl">
+            <h2 className="font-display text-2xl font-extrabold tracking-tight text-primary-950 sm:text-3xl">
               The CPSE Material Master Dilemma
             </h2>
             <p className="mt-1 text-body text-grey-600">
@@ -303,11 +303,11 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 12 }}
               viewport={{ once: true }}
               transition={{ duration: 0.25 }}
-              className="rounded-lg border border-grey-200 bg-white p-5 shadow-panel"
+              className="rounded-lg border border-grey-200/90 border-t-2 border-t-amber-500 bg-white p-5 shadow-panel transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
             >
-              <div className="font-display text-hero font-bold text-amber-800">5+ Codes</div>
-              <h3 className="mt-1 text-lead font-semibold text-grey-900">Per Identical Material</h3>
-              <p className="mt-1 text-caption text-grey-600 leading-relaxed">
+              <div className="font-display text-hero font-extrabold tracking-tight text-amber-800">5+ Codes</div>
+              <h3 className="mt-1.5 text-lead font-bold text-grey-900">Per Identical Material</h3>
+              <p className="mt-1 text-caption text-grey-600 leading-relaxed font-normal">
                 The same industrial valve or bearing holds separate item codes across CPCL, NTPC, SAIL, and IOCL with no cross-referencing.
               </p>
             </motion.div>
@@ -317,11 +317,11 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 12 }}
               viewport={{ once: true }}
               transition={{ duration: 0.25, delay: 0.05 }}
-              className="rounded-lg border border-grey-200 bg-white p-5 shadow-panel"
+              className="rounded-lg border border-grey-200/90 border-t-2 border-t-teal-600 bg-white p-5 shadow-panel transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
             >
-              <div className="font-display text-hero font-bold text-teal-700">Zero Visibility</div>
-              <h3 className="mt-1 text-lead font-semibold text-grey-900">Fragmented Demand</h3>
-              <p className="mt-1 text-caption text-grey-600 leading-relaxed">
+              <div className="font-display text-hero font-extrabold tracking-tight text-teal-800">Zero Visibility</div>
+              <h3 className="mt-1.5 text-lead font-bold text-grey-900">Fragmented Demand</h3>
+              <p className="mt-1 text-caption text-grey-600 leading-relaxed font-normal">
                 Enterprises buy identical physical spares on isolated purchase orders instead of pooling volume into GeM rate contracts.
               </p>
             </motion.div>
@@ -331,11 +331,11 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 12 }}
               viewport={{ once: true }}
               transition={{ duration: 0.25, delay: 0.1 }}
-              className="rounded-lg border border-grey-200 bg-white p-5 shadow-panel"
+              className="rounded-lg border border-grey-200/90 border-t-2 border-t-veto-600 bg-white p-5 shadow-panel transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
             >
-              <div className="font-display text-hero font-bold text-veto-700">Safety Risk</div>
-              <h3 className="mt-1 text-lead font-semibold text-grey-900">Blind Semantic Merging</h3>
-              <p className="mt-1 text-caption text-grey-600 leading-relaxed">
+              <div className="font-display text-hero font-extrabold tracking-tight text-veto-700">Safety Risk</div>
+              <h3 className="mt-1.5 text-lead font-bold text-grey-900">Blind Semantic Merging</h3>
+              <p className="mt-1 text-caption text-grey-600 leading-relaxed font-normal">
                 Generic AI tools merge Class 150 and Class 300 valves due to high text similarity, creating critical industrial safety hazards.
               </p>
             </motion.div>
@@ -434,13 +434,13 @@ export default function LandingPage() {
                 <span className="h-2 w-2 rounded-full bg-high-600" />
                 Live Data Snapshot
               </div>
-              <h2 className="mt-1 font-display text-2xl font-bold tracking-tight text-primary-950 sm:text-3xl">
+              <h2 className="mt-1 font-display text-2xl font-extrabold tracking-tight text-primary-950 sm:text-3xl">
                 Demonstrated Impact Across Seeded Catalogs
               </h2>
             </div>
             <Link
               href="/dashboard"
-              className="inline-flex items-center gap-1 text-caption font-medium text-teal-700 hover:underline"
+              className="inline-flex items-center gap-1 text-caption font-semibold text-teal-700 hover:underline"
             >
               View detailed analytics →
             </Link>
@@ -452,13 +452,13 @@ export default function LandingPage() {
               initial={{ opacity: 0, scale: 0.96 }}
               viewport={{ once: true }}
               transition={{ duration: 0.25 }}
-              className="rounded-lg border border-grey-200 bg-grey-25 p-5"
+              className="rounded-lg border border-grey-200/90 border-t-2 border-t-primary-800 bg-white p-5 shadow-panel transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
             >
-              <div className="eyebrow">Materials Harmonised</div>
-              <div className="mt-1 font-display text-display font-bold text-primary-900">
+              <div className="eyebrow font-bold text-grey-600 tracking-wider">Materials Harmonised</div>
+              <div className="mt-1 font-display text-display font-extrabold tracking-tight text-primary-900 tabular">
                 <CountUp value={t.records} />
               </div>
-              <div className="mt-1 text-caption text-grey-500">Across {t.orgs} public sector enterprises</div>
+              <div className="mt-1 text-caption text-grey-500 font-normal">Across {t.orgs} public sector enterprises</div>
             </motion.div>
 
             <motion.div
@@ -466,13 +466,13 @@ export default function LandingPage() {
               initial={{ opacity: 0, scale: 0.96 }}
               viewport={{ once: true }}
               transition={{ duration: 0.25, delay: 0.05 }}
-              className="rounded-lg border border-grey-200 bg-grey-25 p-5"
+              className="rounded-lg border border-grey-200/90 border-t-2 border-t-amber-500 bg-white p-5 shadow-panel transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
             >
-              <div className="eyebrow">Duplicate Codes Found</div>
-              <div className="mt-1 font-display text-display font-bold text-amber-800">
+              <div className="eyebrow font-bold text-grey-600 tracking-wider">Duplicate Codes Found</div>
+              <div className="mt-1 font-display text-display font-extrabold tracking-tight text-amber-800 tabular">
                 <CountUp value={t.duplicates + t.functional} />
               </div>
-              <div className="mt-1 text-caption text-grey-500">{t.duplicates} exact + {t.functional} functional</div>
+              <div className="mt-1 text-caption text-grey-500 font-normal">{t.duplicates} exact + {t.functional} functional</div>
             </motion.div>
 
             <motion.div
@@ -480,13 +480,13 @@ export default function LandingPage() {
               initial={{ opacity: 0, scale: 0.96 }}
               viewport={{ once: true }}
               transition={{ duration: 0.25, delay: 0.1 }}
-              className="rounded-lg border border-grey-200 bg-grey-25 p-5"
+              className="rounded-lg border border-grey-200/90 border-t-2 border-t-high-600 bg-white p-5 shadow-panel transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
             >
-              <div className="eyebrow">Common National Codes</div>
-              <div className="mt-1 font-display text-display font-bold text-high-700">
+              <div className="eyebrow font-bold text-grey-600 tracking-wider">Common National Codes</div>
+              <div className="mt-1 font-display text-display font-extrabold tracking-tight text-high-700 tabular">
                 <CountUp value={t.canonical} />
               </div>
-              <div className="mt-1 text-caption text-grey-500">{(t.codeReduction * 100).toFixed(0)}% catalog compression</div>
+              <div className="mt-1 text-caption text-grey-500 font-normal">{(t.codeReduction * 100).toFixed(0)}% catalog compression</div>
             </motion.div>
 
             <motion.div
@@ -494,13 +494,13 @@ export default function LandingPage() {
               initial={{ opacity: 0, scale: 0.96 }}
               viewport={{ once: true }}
               transition={{ duration: 0.25, delay: 0.15 }}
-              className="rounded-lg border border-grey-200 bg-grey-25 p-5"
+              className="rounded-lg border border-grey-200/90 border-t-2 border-t-teal-600 bg-white p-5 shadow-panel transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
             >
-              <div className="eyebrow">Indicative Savings Potential</div>
-              <div className="mt-1 font-display text-display font-bold text-teal-700">
+              <div className="eyebrow font-bold text-grey-600 tracking-wider">Indicative Savings Potential</div>
+              <div className="mt-1 font-display text-display font-extrabold tracking-tight text-teal-800 tabular">
                 <CountUp value={oppSaving} format={(n) => fmtInr(n)} />
               </div>
-              <div className="mt-1 text-caption text-grey-500">Via cross-CPSE demand pooling</div>
+              <div className="mt-1 text-caption text-grey-500 font-normal">Via cross-CPSE demand pooling</div>
             </motion.div>
           </div>
         </div>

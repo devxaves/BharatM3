@@ -251,52 +251,58 @@ export default function Dashboard() {
         <button
           type="button"
           onClick={() => setActiveModal('insufficient')}
-          className="group panel flex items-center justify-between px-4 py-2.5 text-left transition-colors hover:border-grey-400"
+          className="group panel flex items-center justify-between p-3.5 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-grey-300 hover:shadow-card-hover"
         >
-          <div className="min-w-0">
-            <div className="eyebrow flex items-center gap-1.5">
-              <HelpCircle size={12} className="text-amber-600" />
-              Insufficient data
-            </div>
-            <div className="mt-0.5 font-display text-lead font-semibold text-grey-900">
-              <CountUp value={t.insufficient} /> <span className="text-caption font-normal text-grey-500">records missing attributes</span>
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-amber-200/80 bg-amber-50 text-amber-700 shadow-sm">
+              <HelpCircle size={15} />
+            </span>
+            <div className="min-w-0">
+              <div className="eyebrow font-bold text-grey-500">Insufficient data</div>
+              <div className="mt-0.5 font-display text-lead font-bold text-grey-900 tracking-tight">
+                <CountUp value={t.insufficient} /> <span className="text-caption font-normal text-grey-500">records missing attrs</span>
+              </div>
             </div>
           </div>
-          <span className="text-micro font-medium text-teal-700 opacity-80 group-hover:opacity-100">Details →</span>
+          <span className="text-micro font-semibold text-teal-700 opacity-80 group-hover:opacity-100 transition-opacity">Details →</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveModal('uom')}
-          className="group panel flex items-center justify-between px-4 py-2.5 text-left transition-colors hover:border-grey-400"
+          className="group panel flex items-center justify-between p-3.5 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-grey-300 hover:shadow-card-hover"
         >
-          <div className="min-w-0">
-            <div className="eyebrow flex items-center gap-1.5">
-              <Ruler size={12} className="text-teal-600" />
-              UOM inconsistencies
-            </div>
-            <div className="mt-0.5 font-display text-lead font-semibold text-grey-900">
-              <CountUp value={t.uom_issues} /> <span className="text-caption font-normal text-grey-500">standardised units</span>
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-teal-200/80 bg-teal-50 text-teal-700 shadow-sm">
+              <Ruler size={15} />
+            </span>
+            <div className="min-w-0">
+              <div className="eyebrow font-bold text-grey-500">UOM inconsistencies</div>
+              <div className="mt-0.5 font-display text-lead font-bold text-grey-900 tracking-tight">
+                <CountUp value={t.uom_issues} /> <span className="text-caption font-normal text-grey-500">standardised units</span>
+              </div>
             </div>
           </div>
-          <span className="text-micro font-medium text-teal-700 opacity-80 group-hover:opacity-100">Details →</span>
+          <span className="text-micro font-semibold text-teal-700 opacity-80 group-hover:opacity-100 transition-opacity">Details →</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveModal('stewards')}
-          className="group panel flex items-center justify-between px-4 py-2.5 text-left transition-colors hover:border-grey-400"
+          className="group panel flex items-center justify-between p-3.5 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-grey-300 hover:shadow-card-hover"
         >
-          <div className="min-w-0">
-            <div className="eyebrow flex items-center gap-1.5">
-              <Users size={12} className="text-high-600" />
-              Steward decisions
-            </div>
-            <div className="mt-0.5 font-display text-lead font-semibold text-grey-900">
-              <CountUp value={t.approved} /> <span className="text-caption font-normal text-grey-500">approved · {t.rejected} rejected</span>
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-high-200/80 bg-high-50 text-high-700 shadow-sm">
+              <Users size={15} />
+            </span>
+            <div className="min-w-0">
+              <div className="eyebrow font-bold text-grey-500">Steward decisions</div>
+              <div className="mt-0.5 font-display text-lead font-bold text-grey-900 tracking-tight">
+                <CountUp value={t.approved} /> <span className="text-caption font-normal text-grey-500">approved · {t.rejected} rejected</span>
+              </div>
             </div>
           </div>
-          <span className="text-micro font-medium text-teal-700 opacity-80 group-hover:opacity-100">Audit trail →</span>
+          <span className="text-micro font-semibold text-teal-700 opacity-80 group-hover:opacity-100 transition-opacity">Audit trail →</span>
         </button>
       </div>
 

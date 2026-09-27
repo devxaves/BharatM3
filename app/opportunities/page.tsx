@@ -207,26 +207,26 @@ export default function OpportunitiesPage() {
       />
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <div className="panel px-4 py-3">
-          <div className="eyebrow">Aggregation Candidates</div>
-          <div className="mt-1 font-display text-display font-bold text-primary-900">
+        <div className="panel border-t-2 border-t-primary-800 p-4 transition-all duration-200 hover:shadow-card-hover">
+          <div className="eyebrow font-bold text-grey-600 tracking-wider">Aggregation Candidates</div>
+          <div className="mt-1 font-display text-display font-extrabold tracking-tight text-primary-900 tabular">
             <CountUp value={items.length} />
           </div>
-          <div className="mt-0.5 text-caption text-grey-500">Shared across {min}+ CPSE catalogs</div>
+          <div className="mt-1 text-caption text-grey-500 font-normal">Shared across {min}+ CPSE catalogs</div>
         </div>
-        <div className="panel px-4 py-3">
-          <div className="eyebrow">Combined Annual Spend</div>
-          <div className="mt-1 font-display text-display font-bold text-grey-900">
+        <div className="panel border-t-2 border-t-teal-600 p-4 transition-all duration-200 hover:shadow-card-hover">
+          <div className="eyebrow font-bold text-grey-600 tracking-wider">Combined Annual Spend</div>
+          <div className="mt-1 font-display text-display font-extrabold tracking-tight text-grey-900 tabular">
             <CountUp value={spend} format={(n) => fmtInr(n)} />
           </div>
-          <div className="mt-0.5 text-caption text-grey-500">Aggregated purchasing volume</div>
+          <div className="mt-1 text-caption text-grey-500 font-normal">Aggregated purchasing volume</div>
         </div>
-        <div className="panel px-4 py-3">
-          <div className="eyebrow">Estimated Annual Savings</div>
-          <div className="mt-1 font-display text-display font-bold text-high-700">
+        <div className="panel border-t-2 border-t-high-600 p-4 transition-all duration-200 hover:shadow-card-hover">
+          <div className="eyebrow font-bold text-grey-600 tracking-wider">Estimated Annual Savings</div>
+          <div className="mt-1 font-display text-display font-extrabold tracking-tight text-high-700 tabular">
             <CountUp value={saving} format={(n) => fmtInr(n)} />
           </div>
-          <div className="mt-0.5 text-caption text-grey-500">~15% volume discount potential</div>
+          <div className="mt-1 text-caption text-grey-500 font-normal">~15% volume discount potential</div>
         </div>
       </div>
 

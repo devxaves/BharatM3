@@ -90,10 +90,18 @@ export default function CanonicalPage({ params }: { params: { id: string } }) {
           {/* Identity Grid */}
           <Panel title="Material Master Identity">
             <div className="grid grid-cols-2 gap-3 p-4 sm:grid-cols-4">
-              <Stat label="ERP Short Code (MATNR)" value={<span className="font-mono text-caption font-bold">{data.shortCode}</span>} hint="SAP ECC safe" />
-              <Stat label="Base UOM · Version" value={<span className="font-mono text-caption font-semibold">{data.baseUom ?? 'EA'} · v{data.version}</span>} />
-              <Stat label="UNSPSC Classification" value={<span className="font-mono text-caption font-semibold">{data.unspscCode ?? '—'}</span>} hint={data.subtype ? humanize(data.subtype) : undefined} />
-              <Stat label="Combined Annual Spend" value={<span className="font-display text-caption font-bold text-high-700">{fmtInr(data.estAnnualValueInr)}</span>} />
+              <div className="rounded-lg border border-grey-200/90 bg-grey-50/60 p-3 transition-all hover:bg-white hover:shadow-sm">
+                <Stat label="ERP Short Code (MATNR)" value={<span className="font-mono text-dense font-bold text-primary-900">{data.shortCode}</span>} hint="SAP ECC safe" />
+              </div>
+              <div className="rounded-lg border border-grey-200/90 bg-grey-50/60 p-3 transition-all hover:bg-white hover:shadow-sm">
+                <Stat label="Base UOM · Version" value={<span className="font-mono text-dense font-bold text-grey-900">{data.baseUom ?? 'EA'} · v{data.version}</span>} />
+              </div>
+              <div className="rounded-lg border border-grey-200/90 bg-grey-50/60 p-3 transition-all hover:bg-white hover:shadow-sm">
+                <Stat label="UNSPSC Classification" value={<span className="font-mono text-dense font-bold text-grey-900">{data.unspscCode ?? '—'}</span>} hint={data.subtype ? humanize(data.subtype) : undefined} />
+              </div>
+              <div className="rounded-lg border border-grey-200/90 bg-grey-50/60 p-3 transition-all hover:bg-white hover:shadow-sm">
+                <Stat label="Combined Spend" value={<span className="font-display text-dense font-extrabold text-high-700">{fmtInr(data.estAnnualValueInr)}</span>} />
+              </div>
             </div>
           </Panel>
 

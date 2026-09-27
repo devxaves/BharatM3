@@ -322,10 +322,10 @@ export default function GovernancePage() {
                       { l: 'Pair Recall', v: ev.data.pairRecall, h: `of ${ev.data.truthPairs} true pairs` },
                       { l: 'Cluster Recall', v: ev.data.clusterRecall, h: 'Transitive match' },
                     ].map((x) => (
-                      <div key={x.l} className="rounded border border-grey-200 bg-grey-25 p-3 text-center">
-                        <div className="eyebrow">{x.l}</div>
-                        <div className="mt-1 font-display text-title font-bold text-primary-900">{x.v === null ? '—' : fmtPct(x.v)}</div>
-                        <div className="mt-0.5 text-micro text-grey-500">{x.h}</div>
+                      <div key={x.l} className="rounded-lg border border-grey-200/90 bg-grey-50/70 p-3.5 text-center transition-all hover:bg-white hover:shadow-sm">
+                        <div className="eyebrow font-bold text-grey-600 tracking-wider">{x.l}</div>
+                        <div className="mt-1 font-display text-title font-extrabold tracking-tight text-primary-900">{x.v === null ? '—' : fmtPct(x.v)}</div>
+                        <div className="mt-0.5 text-micro text-grey-500 font-medium">{x.h}</div>
                       </div>
                     ))}
                   </div>

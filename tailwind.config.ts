@@ -45,7 +45,7 @@ const config: Config = {
     extend: {
       // Deliberately uneven rhythm: 2/6/10/14/18 exist alongside the 4-pt grid for dense rows.
       spacing: { '0.5': '2px', '1.5': '6px', '2.5': '10px', '3.5': '14px', '4.5': '18px', sidebar: 'var(--sidebar-w)', topbar: 'var(--topbar-h)' },
-      boxShadow: { panel: 'var(--shadow-panel)', pop: 'var(--shadow-pop)', none: 'none' },
+      boxShadow: { panel: 'var(--shadow-panel)', 'card-hover': 'var(--shadow-card-hover)', pop: 'var(--shadow-pop)', none: 'none' },
     },
   },
   plugins: [],
