@@ -176,41 +176,41 @@ function QualityReportSummary({ v, onViewFull }: { v: Validation; onViewFull: ()
   return (
     <motion.div {...fadeUp} className="space-y-3">
       {/* Glanceable Summary Cards */}
-      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-5">
-        <div className="rounded border border-grey-200 bg-white p-3">
-          <div className="eyebrow">Valid Rows</div>
-          <div className="font-display text-title font-bold text-high-700">{v.valid} / {v.rows}</div>
-          <div className="text-micro text-grey-500">Passed schema checks</div>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+        <div className="rounded-xl border border-grey-200 border-l-4 border-l-high-600 bg-white p-3.5 shadow-card">
+          <div className="text-micro font-semibold uppercase tracking-[0.08em] text-grey-500">Valid Rows</div>
+          <div className="font-display text-lead font-bold text-high-800 tabular">{v.valid} / {v.rows}</div>
+          <div className="text-micro font-medium text-grey-500 mt-0.5">Passed schema checks</div>
         </div>
 
-        <div className="rounded border border-grey-200 bg-white p-3">
-          <div className="eyebrow">Already Ingested</div>
-          <div className="font-display text-title font-bold text-grey-800">{v.alreadyIngested}</div>
-          <div className="text-micro text-grey-500">Will be skipped (idempotent)</div>
+        <div className="rounded-xl border border-grey-200 border-l-4 border-l-primary-800 bg-white p-3.5 shadow-card">
+          <div className="text-micro font-semibold uppercase tracking-[0.08em] text-grey-500">Already Ingested</div>
+          <div className="font-display text-lead font-bold text-grey-900 tabular">{v.alreadyIngested}</div>
+          <div className="text-micro font-medium text-grey-500 mt-0.5">Will be skipped (idempotent)</div>
         </div>
 
-        <div className={cx('rounded border p-3', v.inFileDuplicates > 0 ? 'border-amber-400 bg-amber-50' : 'border-grey-200 bg-white')}>
-          <div className="eyebrow">In-file Duplicates</div>
-          <div className="font-display text-title font-bold text-amber-800">{v.inFileDuplicates}</div>
-          <div className="text-micro text-grey-500">Duplicate legacy codes</div>
+        <div className={cx('rounded-xl border border-l-4 p-3.5 shadow-card', v.inFileDuplicates > 0 ? 'border-amber-300 border-l-amber-500 bg-amber-50/60' : 'border-grey-200 border-l-grey-400 bg-white')}>
+          <div className="text-micro font-semibold uppercase tracking-[0.08em] text-grey-500">In-file Duplicates</div>
+          <div className="font-display text-lead font-bold text-amber-900 tabular">{v.inFileDuplicates}</div>
+          <div className="text-micro font-medium text-grey-500 mt-0.5">Duplicate legacy codes</div>
         </div>
 
-        <div className={cx('rounded border p-3', v.insufficient > 0 ? 'border-amber-400 bg-amber-50' : 'border-grey-200 bg-white')}>
-          <div className="eyebrow">Insufficient Data</div>
-          <div className="font-display text-title font-bold text-amber-800">{v.insufficient}</div>
-          <div className="text-micro text-grey-500">Missing required field</div>
+        <div className={cx('rounded-xl border border-l-4 p-3.5 shadow-card', v.insufficient > 0 ? 'border-amber-300 border-l-amber-500 bg-amber-50/60' : 'border-grey-200 border-l-grey-400 bg-white')}>
+          <div className="text-micro font-semibold uppercase tracking-[0.08em] text-grey-500">Insufficient Data</div>
+          <div className="font-display text-lead font-bold text-amber-900 tabular">{v.insufficient}</div>
+          <div className="text-micro font-medium text-grey-500 mt-0.5">Missing required field</div>
         </div>
 
-        <div className={cx('rounded border p-3', v.uomIssues.length > 0 ? 'border-teal-500/40 bg-teal-50/50' : 'border-grey-200 bg-white')}>
-          <div className="eyebrow">UOM Inconsistencies</div>
-          <div className="font-display text-title font-bold text-teal-800">{v.uomIssues.reduce((s, x) => s + x.count, 0)}</div>
-          <div className="text-micro text-grey-500">Non-canonical units</div>
+        <div className={cx('rounded-xl border border-l-4 p-3.5 shadow-card', v.uomIssues.length > 0 ? 'border-teal-300 border-l-teal-600 bg-teal-50/60' : 'border-grey-200 border-l-grey-400 bg-white')}>
+          <div className="text-micro font-semibold uppercase tracking-[0.08em] text-grey-500">UOM Inconsistencies</div>
+          <div className="font-display text-lead font-bold text-teal-900 tabular">{v.uomIssues.reduce((s, x) => s + x.count, 0)}</div>
+          <div className="text-micro font-medium text-grey-500 mt-0.5">Non-canonical units</div>
         </div>
       </div>
 
-      <div className="flex items-center justify-between rounded-md border border-grey-200 bg-grey-50 px-4 py-2.5">
-        <div className="text-caption text-grey-700">
-          <b>{v.abbreviations.length}</b> abbreviations detected · <b>{Object.keys(v.categories).length}</b> material categories routed
+      <div className="flex items-center justify-between rounded-xl border border-grey-200 bg-grey-50/80 px-4 py-3 shadow-2xs">
+        <div className="text-caption font-medium text-grey-800">
+          <b className="text-grey-900">{v.abbreviations.length}</b> abbreviations detected · <b className="text-grey-900">{Object.keys(v.categories).length}</b> material categories routed
         </div>
         <Button size="sm" variant="outline" icon={<Eye size={13} />} onClick={onViewFull}>
           View full quality report

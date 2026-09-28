@@ -6,18 +6,23 @@ import { forwardRef, useEffect, type ButtonHTMLAttributes, type ReactNode } from
 import { cx } from '@/lib/format';
 import { fadeUp, transition } from '@/lib/motion';
 
-type Variant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'approve';
-type Size = 'sm' | 'md';
+type Variant = 'primary' | 'secondary' | 'accent' | 'outline' | 'ghost' | 'danger' | 'approve';
+type Size = 'sm' | 'md' | 'lg';
 
 const VARIANTS: Record<Variant, string> = {
-  primary: 'bg-primary-800 text-white hover:bg-primary-900 border border-primary-900 shadow-[inset_0_1px_0_rgb(255_255_255/0.08)]',
-  secondary: 'bg-teal-600 text-white hover:bg-teal-700 border border-teal-700',
-  outline: 'bg-white text-grey-800 border border-grey-300 hover:border-grey-400 hover:bg-grey-50',
+  primary: 'bg-primary-800 text-white border border-primary-800 hover:bg-primary-900 hover:border-primary-900',
+  secondary: 'bg-transparent text-grey-900 border border-grey-200 hover:border-grey-300 hover:bg-white',
+  accent: 'bg-amber-500 text-white border border-amber-500 hover:bg-amber-600 hover:border-amber-600',
+  outline: 'bg-transparent text-grey-900 border border-grey-200 hover:border-grey-300 hover:bg-white',
   ghost: 'bg-transparent text-grey-700 border border-transparent hover:bg-grey-100',
-  danger: 'bg-white text-veto-700 border border-veto-600/40 hover:bg-veto-50 hover:border-veto-600',
-  approve: 'bg-high-600 text-white border border-high-700 hover:bg-high-700 shadow-[inset_0_1px_0_rgb(255_255_255/0.1)]',
+  danger: 'bg-white text-veto-700 border border-veto-600/30 hover:bg-veto-50 hover:border-veto-600',
+  approve: 'bg-high-600 text-white border border-high-600 hover:bg-high-700 hover:border-high-700',
 };
-const SIZES: Record<Size, string> = { sm: 'h-7 px-2.5 text-caption gap-1.5', md: 'h-8 px-3.5 text-dense gap-2' };
+const SIZES: Record<Size, string> = {
+  sm: 'h-7 px-2.5 text-caption gap-1.5 font-medium',
+  md: 'h-9 px-4 text-dense gap-2 font-semibold',
+  lg: 'h-10 px-4 text-dense gap-2 font-semibold',
+};
 
 export const Button = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; size?: Size; icon?: ReactNode; kbd?: string }>(
   function Button({ variant = 'outline', size = 'md', icon, kbd, className, children, ...rest }, ref) {
@@ -25,7 +30,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLBut
       <button
         ref={ref}
         className={cx(
-          'inline-flex select-none items-center justify-center whitespace-nowrap rounded font-medium transition-[background-color,border-color,color,transform] duration-150 active:translate-y-px disabled:pointer-events-none disabled:opacity-45',
+          'inline-flex select-none items-center justify-center whitespace-nowrap rounded-md transition-colors duration-150 disabled:pointer-events-none disabled:opacity-40',
           VARIANTS[variant],
           SIZES[size],
           className,
@@ -34,20 +39,45 @@ export const Button = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLBut
       >
         {icon}
         {children}
-        {kbd && <kbd className={cx('ml-1 rounded-sm px-1 font-mono text-micro', variant === 'outline' || variant === 'ghost' || variant === 'danger' ? 'bg-grey-100 text-grey-500' : 'bg-white/15 text-white/80')}>{kbd}</kbd>}
+        {kbd && (
+          <kbd
+            className={cx(
+              'ml-1 rounded-sm px-1 font-mono text-micro',
+              variant === 'outline' || variant === 'ghost' || variant === 'danger'
+                ? 'bg-grey-100 text-grey-600 border border-grey-200'
+                : 'bg-white/20 text-white',
+            )}
+          >
+            {kbd}
+          </kbd>
+        )}
       </button>
     );
   },
 );
 
-export function Panel({ title, actions, children, className, bodyClassName, subtitle }: { title?: ReactNode; subtitle?: ReactNode; actions?: ReactNode; children: ReactNode; className?: string; bodyClassName?: string }) {
+export function Panel({
+  title,
+  actions,
+  children,
+  className,
+  bodyClassName,
+  subtitle,
+}: {
+  title?: ReactNode;
+  subtitle?: ReactNode;
+  actions?: ReactNode;
+  children: ReactNode;
+  className?: string;
+  bodyClassName?: string;
+}) {
   return (
     <section className={cx('panel', className)}>
       {(title || actions) && (
         <header className="panel-header">
           <div className="min-w-0">
             {title && <h2 className="panel-title">{title}</h2>}
-            {subtitle && <p className="mt-0.5 text-caption text-grey-500">{subtitle}</p>}
+            {subtitle && <p className="mt-0.5 text-caption text-grey-500 font-normal">{subtitle}</p>}
           </div>
           {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
         </header>
@@ -57,13 +87,23 @@ export function Panel({ title, actions, children, className, bodyClassName, subt
   );
 }
 
-export function PageHeader({ eyebrow, title, description, actions }: { eyebrow?: string; title: string; description?: ReactNode; actions?: ReactNode }) {
+export function PageHeader({
+  eyebrow,
+  title,
+  description,
+  actions,
+}: {
+  eyebrow?: string;
+  title: string;
+  description?: ReactNode;
+  actions?: ReactNode;
+}) {
   return (
-    <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
+    <div className="mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-grey-200 pb-5">
       <div className="min-w-0 max-w-3xl">
-        {eyebrow && <div className="eyebrow mb-1.5">{eyebrow}</div>}
-        <h1 className="font-display text-display font-extrabold tracking-tight text-grey-900 sm:text-hero">{title}</h1>
-        {description && <p className="mt-1 text-body text-grey-600 leading-relaxed font-normal">{description}</p>}
+        {eyebrow && <div className="section-tag mb-2.5">{eyebrow}</div>}
+        <h1 className="font-display text-display font-bold tracking-tight text-grey-900 sm:text-section">{title}</h1>
+        {description && <p className="mt-2 text-body leading-relaxed text-grey-500">{description}</p>}
       </div>
       {actions && <div className="flex items-center gap-2">{actions}</div>}
     </div>
@@ -71,12 +111,20 @@ export function PageHeader({ eyebrow, title, description, actions }: { eyebrow?:
 }
 
 export function Kbd({ children }: { children: ReactNode }) {
-  return <kbd className="rounded-sm border border-grey-300 bg-white px-1 font-mono text-micro text-grey-600 shadow-[0_1px_0_rgb(var(--c-grey-300))]">{children}</kbd>;
+  return <kbd className="rounded-sm border border-grey-200 bg-grey-50 px-1.5 py-0.5 font-mono text-micro text-grey-700">{children}</kbd>;
 }
 
-export function Tabs<T extends string>({ value, onChange, items }: { value: T; onChange: (v: T) => void; items: { value: T; label: ReactNode; count?: number; tone?: 'amber' | 'veto' | 'neutral' }[] }) {
+export function Tabs<T extends string>({
+  value,
+  onChange,
+  items,
+}: {
+  value: T;
+  onChange: (v: T) => void;
+  items: { value: T; label: ReactNode; count?: number; tone?: 'amber' | 'veto' | 'neutral' | 'high' }[];
+}) {
   return (
-    <div role="tablist" className="scroll-thin flex items-end gap-0.5 overflow-x-auto border-b border-grey-200">
+    <div role="tablist" className="scroll-thin flex items-end gap-1.5 overflow-x-auto border-b border-grey-200">
       {items.map((it) => {
         const active = it.value === value;
         return (
@@ -85,20 +133,35 @@ export function Tabs<T extends string>({ value, onChange, items }: { value: T; o
             role="tab"
             aria-selected={active}
             onClick={() => onChange(it.value)}
-            className={cx('relative flex shrink-0 items-center gap-1.5 whitespace-nowrap px-2.5 pb-2 pt-1.5 text-dense font-medium transition-colors', active ? 'text-primary-900' : 'text-grey-500 hover:text-grey-800')}
+            className={cx(
+              'relative flex shrink-0 items-center gap-2 whitespace-nowrap px-3.5 pb-2.5 pt-2 text-dense font-semibold transition-colors duration-150',
+              active ? 'text-primary-800' : 'text-grey-500 hover:text-grey-900',
+            )}
           >
             {it.label}
             {it.count !== undefined && (
               <span
                 className={cx(
-                  'tabular rounded-sm px-1.5 text-micro font-semibold',
-                  it.tone === 'amber' && it.count > 0 ? 'bg-amber-100 text-amber-800' : it.tone === 'veto' ? 'bg-veto-50 text-veto-700' : 'bg-grey-100 text-grey-600',
+                  'tabular rounded-sm px-1.5 py-0.5 text-micro font-semibold',
+                  it.tone === 'amber' && it.count > 0
+                    ? 'bg-amber-100 text-amber-900'
+                    : it.tone === 'veto'
+                      ? 'bg-veto-100 text-veto-800'
+                      : it.tone === 'high'
+                        ? 'bg-high-100 text-high-800'
+                        : 'bg-grey-100 text-grey-700',
                 )}
               >
                 {it.count}
               </span>
             )}
-            {active && <motion.span layoutId={`tab-underline-${items.map((i) => i.value).join('')}`} className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-primary-800" transition={transition} />}
+            {active && (
+              <motion.span
+                layoutId={`tab-underline-${items.map((i) => i.value).join('')}`}
+                className="absolute inset-x-1 -bottom-px h-0.5 bg-primary-800"
+                transition={transition}
+              />
+            )}
           </button>
         );
       })}
@@ -106,17 +169,34 @@ export function Tabs<T extends string>({ value, onChange, items }: { value: T; o
   );
 }
 
-export function Segmented<T extends string>({ value, onChange, items }: { value: T; onChange: (v: T) => void; items: { value: T; label: ReactNode }[] }) {
+export function Segmented<T extends string>({
+  value,
+  onChange,
+  items,
+}: {
+  value: T;
+  onChange: (v: T) => void;
+  items: { value: T; label: ReactNode }[];
+}) {
   return (
-    <div className="inline-flex rounded border border-grey-300 bg-grey-50 p-0.5">
+    <div className="inline-flex rounded-md border border-grey-200 bg-grey-100 p-0.5">
       {items.map((it) => (
         <button
           key={it.value}
           onClick={() => onChange(it.value)}
-          className={cx('relative h-6 rounded-sm px-2.5 text-caption font-medium transition-colors', it.value === value ? 'text-primary-900' : 'text-grey-500 hover:text-grey-800')}
+          className={cx(
+            'relative h-7 rounded-sm px-3 text-caption font-semibold transition-colors duration-150',
+            it.value === value ? 'text-primary-800' : 'text-grey-600 hover:text-grey-900',
+          )}
         >
-          {it.value === value && <motion.span layoutId={`seg-${items.map((i) => i.value).join('')}`} className="absolute inset-0 rounded-sm bg-white shadow-panel" transition={transition} />}
-          <span className="relative">{it.label}</span>
+          {it.value === value && (
+            <motion.span
+              layoutId={`seg-${items.map((i) => i.value).join('')}`}
+              className="absolute inset-0 rounded-sm border border-grey-200 bg-white"
+              transition={transition}
+            />
+          )}
+          <span className="relative z-10">{it.label}</span>
         </button>
       ))}
     </div>
@@ -125,10 +205,10 @@ export function Segmented<T extends string>({ value, onChange, items }: { value:
 
 export function Empty({ title, children, icon }: { title: string; children?: ReactNode; icon?: ReactNode }) {
   return (
-    <div className="flex flex-col items-center justify-center px-6 py-12 text-center">
+    <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
       {icon && <div className="mb-3 text-grey-400">{icon}</div>}
       <div className="font-display text-lead font-semibold text-grey-800">{title}</div>
-      {children && <div className="mt-1 max-w-md text-dense text-grey-500">{children}</div>}
+      {children && <div className="mt-1.5 max-w-md text-dense text-grey-500 leading-relaxed">{children}</div>}
     </div>
   );
 }
@@ -136,11 +216,15 @@ export function Empty({ title, children, icon }: { title: string; children?: Rea
 /** Indeterminate loading bar — used in place of a bare spinner. */
 export function LoadingBar({ label = 'Loading' }: { label?: string }) {
   return (
-    <div className="px-4 py-10" role="status" aria-label={label}>
-      <div className="mx-auto h-1 w-48 overflow-hidden rounded-full bg-grey-100">
-        <motion.div className="h-full w-1/3 rounded-full bg-teal-600" animate={{ x: ['-100%', '300%'] }} transition={{ duration: 1.1, repeat: Infinity, ease: 'easeInOut' }} />
+    <div className="px-4 py-12" role="status" aria-label={label}>
+      <div className="mx-auto h-1 w-48 overflow-hidden rounded-full bg-grey-200">
+        <motion.div
+          className="h-full w-1/3 rounded-full bg-primary-800"
+          animate={{ x: ['-100%', '300%'] }}
+          transition={{ duration: 1.1, repeat: Infinity, ease: 'easeInOut' }}
+        />
       </div>
-      <div className="mt-2 text-center text-caption text-grey-500">{label}…</div>
+      <div className="mt-3 text-center text-caption font-medium text-grey-500">{label}…</div>
     </div>
   );
 }
@@ -152,7 +236,7 @@ export function Dialog({
   subtitle,
   children,
   footer,
-  width = 560,
+  width = 600,
   className,
 }: {
   open: boolean;
@@ -175,7 +259,7 @@ export function Dialog({
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-grey-900/40 p-4 backdrop-blur-[2px]"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-grey-950/50 p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -186,17 +270,17 @@ export function Dialog({
             role="dialog"
             aria-modal="true"
             className={cx(
-              'flex max-h-[90vh] w-full flex-col overflow-hidden rounded-lg border border-grey-200 bg-white shadow-pop',
+              'flex max-h-[90vh] w-full flex-col overflow-hidden rounded-xl border border-grey-200 bg-white shadow-elevated',
               className,
             )}
             style={{ maxWidth: typeof width === 'number' ? `${width}px` : width }}
             {...fadeUp}
             onMouseDown={(e) => e.stopPropagation()}
           >
-            <div className="flex items-start justify-between border-b border-grey-200 px-5 py-3.5 bg-grey-25/50">
+            <div className="flex items-start justify-between border-b border-grey-150 bg-white px-6 py-4">
               <div className="min-w-0 pr-4">
-                <h3 className="text-lead font-display font-semibold text-grey-900">{title}</h3>
-                {subtitle && <p className="mt-0.5 text-caption text-grey-500">{subtitle}</p>}
+                <h3 className="text-card font-display font-semibold text-grey-900">{title}</h3>
+                {subtitle && <p className="mt-0.5 text-caption text-grey-500 font-normal">{subtitle}</p>}
               </div>
               <button
                 onClick={onClose}
@@ -206,8 +290,8 @@ export function Dialog({
                 <X size={16} />
               </button>
             </div>
-            <div className="scroll-thin flex-1 overflow-y-auto px-5 py-4">{children}</div>
-            {footer && <div className="flex shrink-0 justify-end gap-2 border-t border-grey-200 bg-grey-25 px-5 py-3">{footer}</div>}
+            <div className="scroll-thin flex-1 overflow-y-auto px-6 py-5">{children}</div>
+            {footer && <div className="flex shrink-0 justify-end gap-2 border-t border-grey-150 bg-grey-50 px-6 py-3.5">{footer}</div>}
           </motion.div>
         </motion.div>
       )}
@@ -215,13 +299,23 @@ export function Dialog({
   );
 }
 
-export function DialogSection({ title, subtitle, children, className }: { title?: ReactNode; subtitle?: ReactNode; children: ReactNode; className?: string }) {
+export function DialogSection({
+  title,
+  subtitle,
+  children,
+  className,
+}: {
+  title?: ReactNode;
+  subtitle?: ReactNode;
+  children: ReactNode;
+  className?: string;
+}) {
   return (
-    <div className={cx('space-y-2 rounded-md border border-grey-200 bg-grey-25/40 p-3.5', className)}>
+    <div className={cx('space-y-2.5 rounded-lg border border-grey-200 bg-grey-50 p-4', className)}>
       {title && (
-        <div className="border-b border-grey-200/80 pb-1.5">
-          <div className="eyebrow !text-grey-600 font-semibold">{title}</div>
-          {subtitle && <div className="text-micro text-grey-500">{subtitle}</div>}
+        <div className="pb-2 border-b border-grey-200">
+          <div className="text-caption font-semibold text-grey-800">{title}</div>
+          {subtitle && <div className="mt-0.5 text-micro text-grey-500">{subtitle}</div>}
         </div>
       )}
       <div>{children}</div>
@@ -229,11 +323,21 @@ export function DialogSection({ title, subtitle, children, className }: { title?
   );
 }
 
-export function Stat({ label, value, hint, className }: { label: string; value: ReactNode; hint?: ReactNode; className?: string }) {
+export function Stat({
+  label,
+  value,
+  hint,
+  className,
+}: {
+  label: string;
+  value: ReactNode;
+  hint?: ReactNode;
+  className?: string;
+}) {
   return (
     <div className={className}>
-      <div className="eyebrow !text-grey-500 font-bold tracking-wider">{label}</div>
-      <div className="mt-1 font-display text-lead font-bold text-grey-900 tracking-tight tabular">{value}</div>
+      <div className="label-caps">{label}</div>
+      <div className="mt-1 font-display text-title font-bold tracking-tight text-grey-900 tabular">{value}</div>
       {hint && <div className="mt-0.5 text-caption text-grey-500 font-normal">{hint}</div>}
     </div>
   );
@@ -258,68 +362,68 @@ export function SummaryCard({
   active?: boolean;
   className?: string;
 }) {
-  const iconToneCls =
+  const accentCls =
     tone === 'amber'
-      ? 'bg-amber-50 text-amber-700 border-amber-200/80'
+      ? 'bg-amber-50 text-amber-700 border-amber-200'
       : tone === 'veto'
-        ? 'bg-veto-50 text-veto-700 border-veto-200/80'
+        ? 'bg-veto-50 text-veto-700 border-veto-200'
         : tone === 'high'
-          ? 'bg-high-50 text-high-700 border-high-200/80'
+          ? 'bg-high-50 text-high-700 border-high-200'
           : tone === 'teal'
-            ? 'bg-teal-50 text-teal-700 border-teal-200/80'
-            : 'bg-primary-50 text-primary-800 border-primary-100';
+            ? 'bg-teal-50 text-teal-700 border-teal-200'
+            : 'bg-primary-100 text-primary-800 border-primary-200';
 
-  const topAccentCls =
+  const borderAccent =
     tone === 'amber'
-      ? 'border-t-2 border-t-amber-500'
+      ? 'bg-amber-500'
       : tone === 'veto'
-        ? 'border-t-2 border-t-veto-600'
+        ? 'bg-veto-600'
         : tone === 'high'
-          ? 'border-t-2 border-t-high-600'
+          ? 'bg-high-600'
           : tone === 'teal'
-            ? 'border-t-2 border-t-teal-600'
-            : 'border-t-2 border-t-primary-800';
+            ? 'bg-teal-600'
+            : 'bg-primary-800';
 
   return (
     <button
       type="button"
       onClick={onClick}
       className={cx(
-        'group relative flex w-full flex-col justify-between rounded-lg border p-3.5 text-left transition-all duration-200',
-        topAccentCls,
-        onClick ? 'cursor-pointer hover:border-grey-300 hover:shadow-card-hover hover:-translate-y-0.5 active:translate-y-0' : 'cursor-default',
-        active ? 'border-teal-600 ring-2 ring-teal-600/20 bg-white' : 'border-grey-200/90 bg-white shadow-panel',
+        'group relative flex w-full flex-col justify-between overflow-hidden rounded-xl border bg-white p-5 text-left transition-colors duration-150',
+        onClick ? 'cursor-pointer hover:border-grey-300' : 'cursor-default',
+        active ? 'border-primary-800 ring-1 ring-primary-800' : 'border-grey-200',
         className,
       )}
     >
+      <span className={cx('absolute inset-x-0 top-0 h-0.5', borderAccent)} aria-hidden />
       <div className="flex w-full items-center justify-between gap-1.5">
-        <span className="eyebrow truncate font-bold text-grey-600 tracking-wider">{label}</span>
+        <span className="label-caps truncate">{label}</span>
         {icon && (
-          <span className={cx('flex h-6 w-6 shrink-0 items-center justify-center rounded border text-caption shadow-sm', iconToneCls)}>
+          <span className={cx('flex h-7 w-7 shrink-0 items-center justify-center rounded-md border', accentCls)}>
             {icon}
           </span>
         )}
       </div>
       <div
         className={cx(
-          'mt-2.5 font-display text-display font-extrabold tracking-tight tabular',
+          'mt-3 font-display text-kpi font-bold tracking-tight tabular',
           tone === 'amber'
-            ? 'text-amber-800'
+            ? 'text-amber-700'
             : tone === 'veto'
               ? 'text-veto-700'
               : tone === 'high'
                 ? 'text-high-700'
                 : tone === 'teal'
-                  ? 'text-teal-800'
+                  ? 'text-teal-700'
                   : 'text-grey-900',
         )}
       >
         {value}
       </div>
-      {hint && <div className="mt-1 line-clamp-1 text-caption text-grey-500 font-normal">{hint}</div>}
+      {hint && <div className="mt-1.5 line-clamp-1 text-caption font-medium text-grey-500">{hint}</div>}
       {onClick && (
-        <div className="mt-3 flex items-center justify-between border-t border-grey-100 pt-2 text-micro font-semibold text-teal-700">
-          <span>Drilldown</span>
+        <div className="mt-4 flex items-center justify-between border-t border-grey-150 pt-2.5 text-caption font-semibold text-primary-800 group-hover:text-primary-900">
+          <span>View breakdown</span>
           <span className="transition-transform duration-150 group-hover:translate-x-1">→</span>
         </div>
       )}

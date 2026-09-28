@@ -8,21 +8,25 @@
   html {
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    font-feature-settings: 'cv11', 'ss01';
   }
   body {
-    @apply bg-grey-50 font-sans text-body text-grey-800 antialiased;
-  }
-  h1, h2, h3, h4 {
-    @apply font-display font-bold text-grey-900 tracking-tight;
-  }
-  h1 {
-    @apply font-extrabold tracking-tight;
+    background-color: var(--background);
+    color: var(--text-primary);
+    @apply font-sans text-body antialiased;
   }
   ::selection {
-    @apply bg-teal-200 text-grey-900;
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+  }
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight text-grey-900;
+  }
+  h1 {
+    @apply font-bold;
   }
   :focus-visible {
-    @apply outline outline-2 outline-offset-1 outline-teal-600;
+    @apply outline outline-2 outline-offset-2 outline-primary-800;
   }
   code, kbd, samp {
     @apply font-mono;
@@ -33,40 +37,75 @@
   /* Numeric columns align on the decimal */
   .tabular { font-variant-numeric: tabular-nums; }
 
+  /* Cards & panels — white, 1px border, near-flat */
   .panel {
-    @apply rounded-lg border border-grey-200/90 bg-white shadow-panel;
+    border-radius: var(--radius-xl);
+    @apply overflow-hidden border border-grey-200 bg-white;
+  }
+  .card {
+    border-radius: var(--radius-xl);
+    @apply border border-grey-200 bg-white;
   }
   .panel-header {
-    @apply flex items-center justify-between gap-3 border-b border-grey-200/80 px-4 py-3;
+    @apply flex items-center justify-between gap-3 border-b border-grey-150 bg-white px-5 py-3.5;
   }
   .panel-title {
-    @apply font-display text-caption font-bold uppercase tracking-[0.08em] text-grey-700;
+    @apply font-display text-lead font-semibold tracking-tight text-grey-900;
   }
-  .eyebrow {
-    @apply text-micro font-bold uppercase tracking-[0.09em] text-grey-500;
+
+  /* Compact uppercase metadata / section identifiers */
+  .eyebrow,
+  .label-caps {
+    @apply text-micro font-semibold uppercase tracking-[0.08em] text-grey-500;
   }
+  /* Section identifier with a short saffron rule — used sparingly */
+  .section-tag {
+    @apply inline-flex items-center gap-2 text-micro font-semibold uppercase tracking-[0.08em] text-grey-500;
+  }
+  .section-tag::before {
+    content: '';
+    @apply block h-0.5 w-4 bg-amber-500;
+  }
+
+  /* Buttons */
+  .btn {
+    border-radius: var(--radius-md);
+    @apply inline-flex select-none items-center justify-center gap-2 whitespace-nowrap px-4 py-2.5 text-dense font-semibold transition-colors duration-150 disabled:pointer-events-none disabled:opacity-40;
+  }
+  .btn-primary { @apply btn bg-primary-800 text-white hover:bg-primary-900; }
+  .btn-secondary { @apply btn border border-grey-200 bg-transparent text-grey-900 hover:border-grey-300 hover:bg-white; }
+  .btn-accent { @apply btn bg-amber-500 text-white hover:bg-amber-600; }
+
   .code {
-    @apply font-mono text-caption text-primary-800 font-semibold;
+    @apply font-mono text-caption font-semibold text-primary-800;
   }
   .field-label {
-    @apply mb-1 block text-caption font-medium text-grey-700;
+    @apply mb-1.5 block text-caption font-medium text-grey-700;
   }
   .input {
-    @apply h-8 w-full rounded border border-grey-300 bg-white px-2.5 text-dense text-grey-900 placeholder:text-grey-400 transition-colors hover:border-grey-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/20 disabled:bg-grey-50 disabled:text-grey-500;
+    border-radius: var(--radius-md);
+    @apply h-9 w-full border border-grey-200 bg-white px-3 text-dense text-grey-900 transition-colors duration-150 placeholder:text-grey-400 hover:border-grey-300 focus:border-primary-800 focus:outline-none focus:ring-2 focus:ring-primary-800/10 disabled:bg-grey-50 disabled:text-grey-400;
   }
   .scroll-thin {
     scrollbar-width: thin;
     scrollbar-color: rgb(var(--c-grey-300)) transparent;
   }
+
   /* Dense data table */
   .dt {
     @apply w-full border-separate border-spacing-0 text-dense;
   }
   .dt thead th {
-    @apply sticky top-0 z-10 h-8 border-b border-grey-200 bg-grey-50 px-3 text-left text-micro font-semibold uppercase tracking-[0.06em] text-grey-600;
+    @apply sticky top-0 z-10 h-10 border-b border-grey-200 bg-grey-50 px-4 text-left text-micro font-semibold uppercase tracking-[0.08em] text-grey-500;
   }
   .dt tbody td {
-    @apply h-9 border-b border-grey-100 px-3 align-middle;
+    @apply h-11 border-b border-grey-150 px-4 align-middle text-grey-800;
+  }
+  .dt tbody tr {
+    @apply transition-colors duration-100;
+  }
+  .dt tbody tr:hover td {
+    @apply bg-grey-50;
   }
   .dt tbody tr.dt-zebra td {
     @apply bg-grey-25;

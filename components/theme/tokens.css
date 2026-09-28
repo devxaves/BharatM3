@@ -1,75 +1,137 @@
 /*
  * BharatM3 design tokens — the ONLY place raw colour values live.
- * Colours are stored as space-separated RGB channels so Tailwind can apply alpha.
- * PRD §8.1: deep navy (structure) · muted teal (secondary / AI-derived signals)
- * · white + light-grey neutrals · amber (attention / AI suggestion awaiting a human)
- * · semantic confidence colours (high / medium / veto).
+ *
+ * Direction: government-grade, institutional, GIS / civic-tech. Calm off-white
+ * canvas, forest-green brand, saffron used sparingly for highlights & attention.
+ *
+ * Two layers:
+ *   1. Semantic tokens (hex) — the documented design system, usable directly in CSS.
+ *   2. Channel scales (space-separated RGB) — power Tailwind utilities with alpha.
+ *      Scale names are historical; their meaning is:
+ *        primary → forest green (brand / actions)
+ *        teal    → civic slate-blue (AI-derived signals, links, info)
+ *        grey    → green-tinted neutrals
+ *        amber   → saffron accent (attention, AI suggestion awaiting a human)
+ *        high    → success / high confidence
+ *        veto    → danger / vetoed / rejected
  */
 :root {
-  /* Primary — deep navy */
-  --c-primary-950: 5 20 38;
-  --c-primary-900: 11 37 69;    /* #0B2545 */
-  --c-primary-800: 18 52 92;    /* #12345C */
-  --c-primary-700: 29 70 116;
-  --c-primary-600: 43 90 142;
-  --c-primary-500: 70 117 166;
-  --c-primary-300: 150 178 210;
-  --c-primary-200: 196 212 231;
-  --c-primary-100: 226 234 244;
-  --c-primary-50: 242 246 251;
+  /* ── 1. Semantic tokens ─────────────────────────────────────────── */
+  --background: #F7F8F6;
+  --surface: #FFFFFF;
+  --surface-muted: #F0F3F0;
+  --text-primary: #17211B;
+  --text-secondary: #66706A;
+  --text-muted: #8A938D;
+  --primary: #164C3B;
+  --primary-dark: #0D3328;
+  --primary-light: #E6F0EB;
+  --accent: #E8792F;
+  --accent-light: #FDF0E7;
+  --success: #2E7D5B;
+  --warning: #D98B2B;
+  --danger: #C84B4B;
+  --info: #3B6F8F;
+  --border: #D9DED9;
+  --border-light: #E8EBE7;
 
-  /* Secondary — muted teal */
-  --c-teal-800: 9 78 78;
-  --c-teal-700: 11 99 98;
-  --c-teal-600: 14 124 123;     /* #0E7C7B */
-  --c-teal-500: 18 116 117;     /* #127475 */
-  --c-teal-400: 64 157 154;
-  --c-teal-200: 172 216 212;
-  --c-teal-100: 216 238 235;
-  --c-teal-50: 238 247 246;
+  /* ── 2. Channel scales ──────────────────────────────────────────── */
 
-  /* Neutrals */
+  /* Primary — forest green */
+  --c-primary-950: 8 36 28;
+  --c-primary-900: 13 51 40;     /* #0D3328 primary-dark */
+  --c-primary-800: 22 76 59;     /* #164C3B primary */
+  --c-primary-700: 33 96 76;
+  --c-primary-600: 47 117 94;
+  --c-primary-500: 76 140 117;
+  --c-primary-400: 120 170 150;
+  --c-primary-300: 160 196 181;
+  --c-primary-200: 200 222 212;
+  --c-primary-100: 230 240 235;  /* #E6F0EB primary-light */
+  --c-primary-50: 243 248 245;
+
+  /* Info — civic slate-blue (AI-derived signals, links) */
+  --c-teal-900: 26 55 74;
+  --c-teal-800: 36 72 96;
+  --c-teal-700: 47 91 119;
+  --c-teal-600: 59 111 143;      /* #3B6F8F info */
+  --c-teal-500: 82 133 164;
+  --c-teal-400: 120 161 186;
+  --c-teal-300: 160 190 208;
+  --c-teal-200: 196 215 227;
+  --c-teal-100: 224 234 241;
+  --c-teal-50: 240 245 249;
+
+  /* Neutrals — green-tinted, institutional */
   --c-white: 255 255 255;
-  --c-grey-25: 251 252 253;
-  --c-grey-50: 245 247 249;
-  --c-grey-100: 236 240 244;
-  --c-grey-200: 222 227 233;
-  --c-grey-300: 199 207 216;
-  --c-grey-400: 152 164 178;
-  --c-grey-500: 107 119 134;
-  --c-grey-600: 76 87 101;
-  --c-grey-700: 52 62 75;
-  --c-grey-800: 33 41 52;
-  --c-grey-900: 20 27 36;
+  --c-grey-25: 251 252 251;
+  --c-grey-50: 247 248 246;      /* #F7F8F6 background */
+  --c-grey-100: 240 243 240;     /* #F0F3F0 surface-muted */
+  --c-grey-150: 232 235 231;     /* #E8EBE7 border-light */
+  --c-grey-200: 217 222 217;     /* #D9DED9 border */
+  --c-grey-300: 190 197 191;
+  --c-grey-400: 138 147 141;     /* #8A938D text-muted */
+  --c-grey-500: 102 112 106;     /* #66706A text-secondary */
+  --c-grey-600: 77 87 81;
+  --c-grey-700: 55 64 58;
+  --c-grey-800: 36 45 39;
+  --c-grey-900: 23 33 27;        /* #17211B text-primary */
+  --c-grey-950: 12 19 15;
 
-  /* Amber — attention & AI suggestions awaiting judgement ONLY */
-  --c-amber-800: 120 76 10;
-  --c-amber-700: 146 94 16;
-  --c-amber-600: 183 121 31;
-  --c-amber-500: 214 158 46;
-  --c-amber-200: 245 222 170;
-  --c-amber-100: 252 241 214;
-  --c-amber-50: 254 249 237;
+  /* Saffron — accent, attention & AI suggestions awaiting judgement */
+  --c-amber-900: 110 50 14;
+  --c-amber-800: 140 66 20;
+  --c-amber-700: 180 88 28;
+  --c-amber-600: 208 104 36;
+  --c-amber-500: 232 121 47;     /* #E8792F accent */
+  --c-amber-400: 240 158 102;
+  --c-amber-300: 246 192 153;
+  --c-amber-200: 249 214 188;
+  --c-amber-100: 251 228 211;
+  --c-amber-50: 253 240 231;     /* #FDF0E7 accent-light */
 
-  /* Semantic confidence */
-  --c-high-700: 22 110 86;
-  --c-high-600: 31 138 110;
-  --c-high-100: 219 241 233;
-  --c-high-50: 238 249 245;
-  --c-veto-700: 150 52 45;
-  --c-veto-600: 180 70 60;
-  --c-veto-100: 248 226 223;
-  --c-veto-50: 252 242 240;
+  /* Success / high confidence */
+  --c-high-900: 20 64 45;
+  --c-high-800: 30 86 62;
+  --c-high-700: 38 105 76;
+  --c-high-600: 46 125 91;       /* #2E7D5B success */
+  --c-high-500: 76 150 117;
+  --c-high-400: 116 176 148;
+  --c-high-200: 188 220 204;
+  --c-high-100: 222 239 230;
+  --c-high-50: 240 247 243;
 
-  /* Radii / shadow */
-  --radius-sm: 4px;
+  /* Danger / veto */
+  --c-veto-900: 110 34 34;
+  --c-veto-800: 140 45 45;
+  --c-veto-700: 170 58 58;
+  --c-veto-600: 200 75 75;       /* #C84B4B danger */
+  --c-veto-500: 214 110 110;
+  --c-veto-400: 226 150 150;
+  --c-veto-300: 233 176 176;
+  --c-veto-200: 240 200 200;
+  --c-veto-100: 248 225 225;
+  --c-veto-50: 252 242 242;
+
+  /* Warning — used for cautionary (non-accent) states */
+  --c-warning-600: 217 139 43;   /* #D98B2B */
+  --c-warning-100: 250 236 214;
+
+  /* Radii — restrained */
+  --radius-sm: 6px;
   --radius-md: 8px;
-  --radius-lg: 12px;
-  --shadow-panel: 0 1px 3px 0 rgb(var(--c-grey-900) / 0.05), 0 1px 2px -1px rgb(var(--c-grey-900) / 0.03);
-  --shadow-card-hover: 0 6px 16px -2px rgb(var(--c-grey-900) / 0.08), 0 2px 6px -1px rgb(var(--c-grey-900) / 0.04);
-  --shadow-pop: 0 12px 32px rgb(var(--c-grey-900) / 0.16), 0 2px 6px rgb(var(--c-grey-900) / 0.08);
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --radius-2xl: 14px;
+
+  /* Shadows — near-flat; borders carry the structure */
+  --shadow-panel: 0 1px 2px 0 rgb(23 33 27 / 0.03);
+  --shadow-card: 0 1px 2px 0 rgb(23 33 27 / 0.04);
+  --shadow-card-hover: 0 2px 8px -2px rgb(23 33 27 / 0.08);
+  --shadow-elevated: 0 12px 32px -8px rgb(23 33 27 / 0.14);
+  --shadow-pop: 0 8px 24px -6px rgb(23 33 27 / 0.14), 0 1px 3px rgb(23 33 27 / 0.06);
 
   /* Layout */
-  --sidebar-w: 232px;
-  --topbar-h: 52px;
+  --topbar-h: 60px;
+  --navbar-h: 44px;
 }

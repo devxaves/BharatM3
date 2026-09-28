@@ -144,17 +144,17 @@ function AuditInner() {
           <motion.div
             {...fadeUp}
             className={cx(
-              'mb-3 flex items-center gap-3 rounded-md border px-4 py-2.5',
-              verify.data.ok ? 'border-high-600/40 bg-high-50' : 'border-veto-600/40 bg-veto-50',
+              'mb-4 flex items-center gap-3.5 rounded-xl border-2 p-4 shadow-sm',
+              verify.data.ok ? 'border-high-600 bg-high-50/80 text-high-900' : 'border-veto-600 bg-veto-50/80 text-veto-900',
             )}
           >
-            {verify.data.ok ? <ShieldCheck size={20} className="text-high-600" /> : <ShieldX size={20} className="text-veto-600" />}
+            {verify.data.ok ? <ShieldCheck size={24} className="text-high-700 shrink-0" /> : <ShieldX size={24} className="text-veto-700 shrink-0" />}
             <div className="text-dense">
-              <div className={cx('font-semibold', verify.data.ok ? 'text-high-700' : 'text-veto-700')}>
+              <div className="font-bold text-grey-900">
                 {verify.data.ok ? 'Cryptographic Chain Intact' : 'Chain Broken'} — {verify.data.message}
               </div>
-              <div className="font-mono text-micro text-grey-600">
-                head {verify.data.headHash} · {verify.data.checked} events verified in {verify.data.ms} ms
+              <div className="font-mono text-caption text-grey-600 mt-0.5">
+                Head: <span className="font-bold text-grey-900">{verify.data.headHash}</span> · {verify.data.checked} events verified in {verify.data.ms} ms
               </div>
             </div>
           </motion.div>
@@ -166,14 +166,14 @@ function AuditInner() {
         actions={
           <div className="flex items-center gap-2">
             <input
-              className="input h-7 w-64"
+              className="input h-8 w-64 text-dense"
               placeholder="Search actor, entity, reason, payload…"
               value={q}
               onChange={(e) => setQ(e.target.value)}
               aria-label="Search audit"
             />
             <select
-              className="input h-7 w-60"
+              className="input h-8 w-60 text-dense font-medium"
               value={action}
               onChange={(e) => setAction(e.target.value)}
               aria-label="Action filter"

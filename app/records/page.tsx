@@ -111,7 +111,7 @@ function RecordDetailDialog({ id, onClose }: { id: string; onClose: () => void }
           {n && Object.keys(n.attributes).length ? (
             <table className="w-full text-caption">
               <thead>
-                <tr className="border-b border-grey-200 text-left text-micro uppercase tracking-wider text-grey-500">
+                <tr className="border-b border-grey-200 text-left text-micro uppercase tracking-[0.08em] text-grey-500">
                   <th className="py-1">Attribute</th>
                   <th className="py-1">Extracted Value</th>
                   <th className="py-1 text-right">Confidence</th>

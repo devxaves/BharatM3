@@ -100,7 +100,7 @@ export default function CanonicalPage({ params }: { params: { id: string } }) {
                 <Stat label="UNSPSC Classification" value={<span className="font-mono text-dense font-bold text-grey-900">{data.unspscCode ?? '—'}</span>} hint={data.subtype ? humanize(data.subtype) : undefined} />
               </div>
               <div className="rounded-lg border border-grey-200/90 bg-grey-50/60 p-3 transition-all hover:bg-white hover:shadow-sm">
-                <Stat label="Combined Spend" value={<span className="font-display text-dense font-extrabold text-high-700">{fmtInr(data.estAnnualValueInr)}</span>} />
+                <Stat label="Combined Spend" value={<span className="font-display text-dense font-bold text-high-700">{fmtInr(data.estAnnualValueInr)}</span>} />
               </div>
             </div>
           </Panel>

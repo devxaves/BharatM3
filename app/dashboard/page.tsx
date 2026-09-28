@@ -247,62 +247,62 @@ export default function Dashboard() {
       </motion.div>
 
       {/* Secondary summary bar: compact stats with on-demand click detail */}
-      <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-3">
+      <div className="mt-4 grid grid-cols-1 gap-3.5 md:grid-cols-3">
         <button
           type="button"
           onClick={() => setActiveModal('insufficient')}
-          className="group panel flex items-center justify-between p-3.5 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-grey-300 hover:shadow-card-hover"
+          className="group panel flex items-center justify-between p-4 text-left transition-colors duration-150 hover:border-grey-300"
         >
-          <div className="flex items-center gap-3 min-w-0">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-amber-200/80 bg-amber-50 text-amber-700 shadow-sm">
-              <HelpCircle size={15} />
+          <div className="flex items-center gap-3.5 min-w-0">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-amber-200 bg-amber-50 text-amber-800 shadow-2xs">
+              <HelpCircle size={16} />
             </span>
             <div className="min-w-0">
-              <div className="eyebrow font-bold text-grey-500">Insufficient data</div>
+              <div className="text-micro font-semibold uppercase tracking-[0.08em] text-grey-500">Insufficient Data</div>
               <div className="mt-0.5 font-display text-lead font-bold text-grey-900 tracking-tight">
-                <CountUp value={t.insufficient} /> <span className="text-caption font-normal text-grey-500">records missing attrs</span>
+                <CountUp value={t.insufficient} /> <span className="text-caption font-medium text-grey-500">records missing attrs</span>
               </div>
             </div>
           </div>
-          <span className="text-micro font-semibold text-teal-700 opacity-80 group-hover:opacity-100 transition-opacity">Details →</span>
+          <span className="text-micro font-bold text-amber-800 opacity-90 group-hover:opacity-100 transition-opacity">Details →</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveModal('uom')}
-          className="group panel flex items-center justify-between p-3.5 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-grey-300 hover:shadow-card-hover"
+          className="group panel flex items-center justify-between p-4 text-left transition-colors duration-150 hover:border-grey-300"
         >
-          <div className="flex items-center gap-3 min-w-0">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-teal-200/80 bg-teal-50 text-teal-700 shadow-sm">
-              <Ruler size={15} />
+          <div className="flex items-center gap-3.5 min-w-0">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-teal-200 bg-teal-50 text-teal-800 shadow-2xs">
+              <Ruler size={16} />
             </span>
             <div className="min-w-0">
-              <div className="eyebrow font-bold text-grey-500">UOM inconsistencies</div>
+              <div className="text-micro font-semibold uppercase tracking-[0.08em] text-grey-500">UOM Inconsistencies</div>
               <div className="mt-0.5 font-display text-lead font-bold text-grey-900 tracking-tight">
-                <CountUp value={t.uom_issues} /> <span className="text-caption font-normal text-grey-500">standardised units</span>
+                <CountUp value={t.uom_issues} /> <span className="text-caption font-medium text-grey-500">standardised units</span>
               </div>
             </div>
           </div>
-          <span className="text-micro font-semibold text-teal-700 opacity-80 group-hover:opacity-100 transition-opacity">Details →</span>
+          <span className="text-micro font-bold text-teal-800 opacity-90 group-hover:opacity-100 transition-opacity">Details →</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveModal('stewards')}
-          className="group panel flex items-center justify-between p-3.5 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-grey-300 hover:shadow-card-hover"
+          className="group panel flex items-center justify-between p-4 text-left transition-colors duration-150 hover:border-grey-300"
         >
-          <div className="flex items-center gap-3 min-w-0">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-high-200/80 bg-high-50 text-high-700 shadow-sm">
-              <Users size={15} />
+          <div className="flex items-center gap-3.5 min-w-0">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-high-200 bg-high-50 text-high-800 shadow-2xs">
+              <Users size={16} />
             </span>
             <div className="min-w-0">
-              <div className="eyebrow font-bold text-grey-500">Steward decisions</div>
+              <div className="text-micro font-semibold uppercase tracking-[0.08em] text-grey-500">Steward Decisions</div>
               <div className="mt-0.5 font-display text-lead font-bold text-grey-900 tracking-tight">
-                <CountUp value={t.approved} /> <span className="text-caption font-normal text-grey-500">approved · {t.rejected} rejected</span>
+                <CountUp value={t.approved} /> <span className="text-caption font-medium text-grey-500">approved · {t.rejected} rejected</span>
               </div>
             </div>
           </div>
-          <span className="text-micro font-semibold text-teal-700 opacity-80 group-hover:opacity-100 transition-opacity">Audit trail →</span>
+          <span className="text-micro font-bold text-high-800 opacity-90 group-hover:opacity-100 transition-opacity">Audit trail →</span>
         </button>
       </div>
 
@@ -533,15 +533,15 @@ export default function Dashboard() {
       >
         <div className="space-y-4">
           <div className="grid grid-cols-3 gap-3">
-            <div className="rounded border border-grey-200 bg-grey-25 p-3 text-center">
+            <div className="rounded-md border border-grey-150 bg-grey-50 p-3 text-center">
               <div className="eyebrow">Total Records</div>
               <div className="font-display text-title font-bold text-primary-900">{t.records}</div>
             </div>
-            <div className="rounded border border-grey-200 bg-grey-25 p-3 text-center">
+            <div className="rounded-md border border-grey-150 bg-grey-50 p-3 text-center">
               <div className="eyebrow">Connected CPSEs</div>
               <div className="font-display text-title font-bold text-primary-900">{t.orgs}</div>
             </div>
-            <div className="rounded border border-grey-200 bg-grey-25 p-3 text-center">
+            <div className="rounded-md border border-grey-150 bg-grey-50 p-3 text-center">
               <div className="eyebrow">Abbreviations Expanded</div>
               <div className="font-display text-title font-bold text-teal-700">{t.abbreviations.toLocaleString('en-IN')}</div>
             </div>
@@ -582,15 +582,15 @@ export default function Dashboard() {
       >
         <div className="space-y-4">
           <div className="grid grid-cols-3 gap-3">
-            <div className="rounded border border-grey-200 bg-grey-25 p-3 text-center">
+            <div className="rounded-md border border-grey-150 bg-grey-50 p-3 text-center">
               <div className="eyebrow">National Codes</div>
               <div className="font-display text-title font-bold text-high-700">{t.canonical}</div>
             </div>
-            <div className="rounded border border-grey-200 bg-grey-25 p-3 text-center">
+            <div className="rounded-md border border-grey-150 bg-grey-50 p-3 text-center">
               <div className="eyebrow">Mapped Legacy Codes</div>
               <div className="font-display text-title font-bold text-primary-900">{t.mapped}</div>
             </div>
-            <div className="rounded border border-grey-200 bg-grey-25 p-3 text-center">
+            <div className="rounded-md border border-grey-150 bg-grey-50 p-3 text-center">
               <div className="eyebrow">Avg Codes per CNMC</div>
               <div className="font-display text-title font-bold text-teal-700">
                 {t.canonical > 0 ? (t.mapped / t.canonical).toFixed(1) : '1.0'}x
@@ -632,7 +632,7 @@ export default function Dashboard() {
         <div className="space-y-4 text-dense">
           <div className="rounded-lg border border-teal-600/30 bg-teal-50/50 p-4">
             <div className="eyebrow !text-teal-800">Catalog Reduction Rate</div>
-            <div className="mt-1 font-display text-hero font-bold text-teal-900">
+            <div className="mt-1 font-display text-kpi font-bold text-teal-700">
               {(t.codeReduction * 100).toFixed(1)}%
             </div>
             <p className="mt-1 text-caption text-teal-800">
@@ -659,12 +659,12 @@ export default function Dashboard() {
       >
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
-            <div className="rounded border border-grey-200 bg-grey-25 p-3">
+            <div className="rounded-md border border-grey-150 bg-grey-50 p-3">
               <div className="eyebrow">Exact / Near Duplicates</div>
               <div className="font-display text-title font-bold text-primary-900">{t.duplicates} pairs</div>
               <p className="mt-1 text-micro text-grey-500">Same manufacturer part, specification, or dimensional fingerprint.</p>
             </div>
-            <div className="rounded border border-grey-200 bg-grey-25 p-3">
+            <div className="rounded-md border border-grey-150 bg-grey-50 p-3">
               <div className="eyebrow">Functional Equivalents</div>
               <div className="font-display text-title font-bold text-amber-800">{t.functional} pairs</div>
               <p className="mt-1 text-micro text-grey-500">Different OEM or make, but fully interchangeable duty specs.</p>
@@ -861,19 +861,19 @@ export default function Dashboard() {
         >
           <div className="space-y-4 text-dense">
             <div className="grid grid-cols-2 gap-3">
-              <div className="rounded border border-grey-200 bg-grey-25 p-3">
+              <div className="rounded-md border border-grey-150 bg-grey-50 p-3">
                 <div className="eyebrow">Total Ingested</div>
                 <div className="font-display text-title font-bold">{selectedCategory.records}</div>
               </div>
-              <div className="rounded border border-grey-200 bg-grey-25 p-3">
+              <div className="rounded-md border border-grey-150 bg-grey-50 p-3">
                 <div className="eyebrow">Harmonised to CNMC</div>
                 <div className="font-display text-title font-bold text-high-700">{selectedCategory.mapped}</div>
               </div>
-              <div className="rounded border border-grey-200 bg-grey-25 p-3">
+              <div className="rounded-md border border-grey-150 bg-grey-50 p-3">
                 <div className="eyebrow">National Codes (CNMC)</div>
                 <div className="font-display text-title font-bold text-primary-900">{selectedCategory.canonical}</div>
               </div>
-              <div className="rounded border border-grey-200 bg-grey-25 p-3">
+              <div className="rounded-md border border-grey-150 bg-grey-50 p-3">
                 <div className="eyebrow">Pending Review</div>
                 <div className="font-display text-title font-bold text-amber-800">{selectedCategory.pending}</div>
               </div>

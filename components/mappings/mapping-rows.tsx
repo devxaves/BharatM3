@@ -40,7 +40,7 @@ export function MappingRows({
     <div className="scroll-thin overflow-x-auto">
       <table className="w-full text-caption">
         <thead>
-          <tr className="border-b border-grey-200 text-left text-micro uppercase tracking-wider text-grey-500">
+          <tr className="border-b border-grey-200 text-left text-micro uppercase tracking-[0.08em] text-grey-500">
             <th className="py-1.5 pr-3 font-semibold">CPSE</th>
             <th className="py-1.5 pr-3 font-semibold">Legacy code</th>
             <th className="py-1.5 pr-3 font-semibold">Description in source ERP</th>
