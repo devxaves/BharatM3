@@ -27,7 +27,7 @@ export const GET = route<{ params: { cnmc: string } }>(async (req, { params }) =
     if (!o) throw new ApiError(404, `Unknown CPSE ${orgCode}`);
     receiver = { org: o.code, client: o.client ?? undefined };
   }
-  const headers = { 'x-bharatm3-cnmc': c.cnmc, 'cache-control': 'no-store' };
+  const headers = { 'x-unimat-cnmc': c.cnmc, 'cache-control': 'no-store' };
   if (format === 'idoc') return NextResponse.json(toIdoc(exportable, receiver), { headers });
   if (format === 'odata') return NextResponse.json(toOData(exportable, receiver), { headers });
   return NextResponse.json(

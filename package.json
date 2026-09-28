@@ -1,8 +1,8 @@
 {
-  "name": "bharatm3",
+  "name": "unimat",
   "version": "1.0.0",
   "private": true,
-  "description": "BharatM3 — AI-driven National Material Master harmonization platform for CPSEs (SIH PS 26099)",
+  "description": "UniMat — AI-driven National Material Master harmonization platform for CPSEs",
   "scripts": {
     "predev": "tsx seed/generate-seed-data.ts --if-empty",
     "dev": "next dev",

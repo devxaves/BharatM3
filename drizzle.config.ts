@@ -4,5 +4,5 @@ export default defineConfig({
   schema: './lib/db/schema.ts',
   out: './drizzle',
   dialect: 'postgresql',
-  dbCredentials: { url: process.env.DATABASE_URL ?? 'postgresql://localhost/bharatm3' },
+  dbCredentials: { url: process.env.DATABASE_URL ?? 'postgresql://localhost/unimat' },
 });

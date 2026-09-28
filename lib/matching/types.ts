@@ -1,5 +1,5 @@
 /**
- * Shared domain types for the BharatM3 matching engine.
+ * Shared domain types for the UniMat matching engine.
  * These are pure types — no DB or framework dependency — so every engine stage is unit-testable.
  */
 

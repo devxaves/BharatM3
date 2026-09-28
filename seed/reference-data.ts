@@ -78,9 +78,9 @@ export const ROLES_SEED = [
 
 /** Fictional platform users (names are illustrative). */
 export const USERS_SEED = [
-  { key: 'steward', name: 'Anjali Menon', email: 'anjali.menon@steward.bharatm3.demo', role: 'data_steward', org: 'CPCL', designation: 'Sr. Manager (Materials) — Data Steward' },
-  { key: 'steward2', name: 'Suresh K. Patnaik', email: 'suresh.patnaik@steward.bharatm3.demo', role: 'data_steward', org: 'NTPC', designation: 'DGM (C&M) — Data Steward' },
-  { key: 'entry', name: 'R. Venkatesh', email: 'venkatesh.r@entry.bharatm3.demo', role: 'data_entry', org: 'CPCL', designation: 'Officer (Materials Codification)' },
-  { key: 'admin', name: 'Kavitha Raghunathan', email: 'kavitha.r@admin.bharatm3.demo', role: 'admin', org: 'CPCL', designation: 'Chief Manager (IT-ERP) — MDM Administrator' },
-  { key: 'auditor', name: 'Pradeep Sharma', email: 'pradeep.sharma@audit.bharatm3.demo', role: 'auditor', org: 'CPCL', designation: 'Dy. General Manager (Internal Audit)' },
+  { key: 'steward', name: 'Admin', email: 'steward@unimat.demo', role: 'data_steward', org: 'CPCL', designation: 'Sr. Manager (Materials) — Data Steward' },
+  { key: 'steward2', name: 'Admin', email: 'steward2@unimat.demo', role: 'data_steward', org: 'NTPC', designation: 'DGM (C&M) — Data Steward' },
+  { key: 'entry', name: 'Admin', email: 'entry@unimat.demo', role: 'data_entry', org: 'CPCL', designation: 'Officer (Materials Codification)' },
+  { key: 'admin', name: 'Admin', email: 'admin@unimat.demo', role: 'admin', org: 'CPCL', designation: 'Chief Manager (IT-ERP) — MDM Administrator' },
+  { key: 'auditor', name: 'Admin', email: 'auditor@unimat.demo', role: 'auditor', org: 'CPCL', designation: 'Dy. General Manager (Internal Audit)' },
 ] as const;

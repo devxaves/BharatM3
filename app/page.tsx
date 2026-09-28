@@ -62,7 +62,7 @@ const PIPELINE_STEPS = [
     step: '03',
     title: 'Classify',
     subtitle: 'Attribute extraction & embedding',
-    description: 'Category schema extractors parse governed engineering attributes with pgvector semantic indexing.',
+    description: 'Category schema extractors parse governed engineering attributes with semantic indexing.',
     icon: <Layers size={16} className="text-primary-800" />,
   },
   {
@@ -131,13 +131,9 @@ export default function LandingPage() {
       <header className="sticky top-0 z-40 border-b border-grey-200 bg-white">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="flex items-center gap-2.5">
-            <svg width="26" height="26" viewBox="0 0 28 28" aria-hidden>
-              <rect x="0.5" y="0.5" width="27" height="27" rx="5" fill="rgb(var(--c-primary-800))" stroke="rgb(var(--c-primary-800))" />
-              <path d="M6 20V8.5l4.5 6 4.5-6V20" fill="none" stroke="rgb(var(--c-white))" strokeWidth="2" strokeLinejoin="round" />
-              <path d="M18.5 8h3.2l-2 2.6c1.3.2 2.2 1.1 2.2 2.4 0 1.5-1.2 2.5-2.8 2.5-.8 0-1.5-.2-2-.6" fill="none" stroke="rgb(var(--c-amber-400))" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <img src="/unimat-logo.png" alt="" width={30} height={30} className="h-[30px] w-[30px] object-contain" aria-hidden />
             <div className="leading-tight">
-              <div className="text-[16px] font-bold tracking-tight text-grey-900">BharatM3</div>
+              <div className="text-[16px] font-bold tracking-tight text-grey-900">UniMat</div>
               <div className="hidden text-micro font-medium uppercase tracking-[0.08em] text-grey-500 sm:block">National Material Master</div>
             </div>
           </Link>
@@ -175,7 +171,7 @@ export default function LandingPage() {
               transition={{ duration: 0.3, ease: [0.2, 0, 0, 1] }}
               className="lg:col-span-7"
             >
-              <div className="section-tag mb-5">SIH PS 26099 · Ministry of Petroleum &amp; Natural Gas</div>
+              <div className="section-tag mb-5">National Material Master</div>
 
               <h1 className="font-display text-4xl font-bold text-grey-900 sm:text-5xl lg:text-jumbo">
                 One Nation, One Material Code for Indian CPSEs
@@ -186,7 +182,7 @@ export default function LandingPage() {
               </p>
 
               <p className="mt-3 max-w-xl text-lead leading-relaxed text-grey-500">
-                BharatM3 eliminates duplicate material codes across public sector enterprises through explainable matching, safety-critical exclusion vetoes, and zero-disruption ERP synchronization.
+                UniMat eliminates duplicate material codes across public sector enterprises through explainable matching, safety-critical exclusion vetoes, and zero-disruption ERP synchronization.
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -535,7 +531,7 @@ export default function LandingPage() {
       <footer className="mt-auto border-t border-primary-950 bg-primary-950 py-6">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 sm:flex-row sm:px-6 text-caption text-primary-300">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-white">BharatM3</span> · SIH PS 26099 · MoPNG & Participating CPSEs
+            <span className="font-semibold text-white">UniMat</span> · Participating CPSEs
           </div>
           <div>
             Synthetic demonstration data for national material master harmonization.

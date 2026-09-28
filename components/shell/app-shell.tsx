@@ -13,10 +13,12 @@ import {
   FileUp,
   Gauge,
   Landmark,
+  Menu,
   PlugZap,
   ScrollText,
   Search,
   SlidersHorizontal,
+  X,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -64,16 +66,7 @@ const NAV: {
 ];
 
 function Mark() {
-  return (
-    <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary-800">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white" aria-hidden>
-        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
-        <path d="M8 7h8" />
-        <path d="M8 11h8" />
-        <path d="m8 15 3 2 5-4" stroke="rgb(var(--c-amber-400))" />
-      </svg>
-    </div>
-  );
+  return <img src="/unimat-logo.png" alt="" width={36} height={36} className="h-9 w-9 object-contain" aria-hidden />;
 }
 
 /** Thin institutional strip above the masthead. */
@@ -82,16 +75,14 @@ function UtilityStrip({ driver }: { driver?: string }) {
     <div className="hidden border-b border-primary-950 bg-primary-900 text-primary-100 md:block">
       <div className="mx-auto flex h-7 max-w-[1600px] items-center justify-between px-6 text-micro font-medium">
         <div className="flex items-center gap-3">
-          <span className="font-semibold uppercase tracking-[0.08em] text-white">Ministry of Petroleum &amp; Natural Gas</span>
+          <span className="font-semibold uppercase tracking-[0.08em] text-white">UniMat</span>
           <span className="h-3 w-px bg-primary-600" />
-          <span className="text-primary-200">National Material Master · SIH PS 26099</span>
+          <span className="text-primary-200">National Material Master</span>
         </div>
         {driver && (
           <div className="flex items-center gap-1.5 text-primary-200">
             <span className="h-1.5 w-1.5 rounded-full bg-high-400" />
             <span className="uppercase tracking-[0.08em]">Live</span>
-            <span className="text-primary-300">·</span>
-            {driver === 'neon' ? 'Neon Postgres' : 'Embedded Postgres (PGlite)'} · pgvector
           </div>
         )}
       </div>
@@ -104,11 +95,11 @@ function NavBar({ pending }: { pending: number }) {
   const active = (href: string) => path === href || (href !== '/dashboard' && path.startsWith(href));
 
   return (
-    <nav aria-label="Primary" className="border-b border-grey-200 bg-white">
-      <div className="scroll-thin mx-auto flex h-navbar max-w-[1600px] items-stretch gap-1 overflow-x-auto px-6">
+    <nav aria-label="Primary" className="hidden border-b border-grey-200 bg-white xl:block">
+      <div className="no-scrollbar mx-auto flex h-navbar max-w-[1600px] items-stretch overflow-x-auto px-4 2xl:gap-1 2xl:px-6">
         {NAV.map((g, gi) => (
           <div key={g.group} className="flex items-stretch">
-            {gi > 0 && <span className="mx-1.5 my-3.5 w-px shrink-0 bg-grey-200" aria-hidden />}
+            {gi > 0 && <span className="mx-1 my-3.5 w-px shrink-0 bg-grey-200 2xl:mx-1.5" aria-hidden />}
             {g.items.map((it) => {
               const on = active(it.href);
               return (
@@ -118,11 +109,11 @@ function NavBar({ pending }: { pending: number }) {
                   title={`${g.group} · ${it.label}`}
                   aria-current={on ? 'page' : undefined}
                   className={cx(
-                    'relative flex shrink-0 items-center gap-2 whitespace-nowrap px-2.5 text-dense font-medium transition-colors duration-150',
+                    'relative flex shrink-0 items-center gap-2 whitespace-nowrap px-2 text-dense font-medium transition-colors duration-150 2xl:px-2.5',
                     on ? 'text-primary-800' : 'text-grey-600 hover:text-primary-800',
                   )}
                 >
-                  <span className={cx('hidden 2xl:inline', on ? 'text-primary-800' : 'text-grey-400')}>{it.icon}</span>
+                  <span className={cx('hidden min-[1680px]:inline', on ? 'text-primary-800' : 'text-grey-400')}>{it.icon}</span>
                   <span className={cx(on && 'font-semibold')}>{it.label}</span>
                   {it.tag && (
                     <span className="rounded-sm border border-grey-200 bg-grey-50 px-1 font-mono text-[10px] font-medium text-grey-600">{it.tag}</span>
@@ -138,7 +129,7 @@ function NavBar({ pending }: { pending: number }) {
                   {on && (
                     <motion.span
                       layoutId="nav-active"
-                      className="absolute inset-x-2.5 bottom-0 h-0.5 bg-primary-800"
+                      className="absolute inset-x-2 bottom-0 h-0.5 bg-primary-800 2xl:inset-x-2.5"
                       transition={transition}
                     >
                       <span className="absolute left-0 top-0 h-0.5 w-3 bg-amber-500" />
@@ -151,6 +142,107 @@ function NavBar({ pending }: { pending: number }) {
         ))}
       </div>
     </nav>
+  );
+}
+
+/** Below xl the horizontal nav doesn't fit, so it collapses into a slide-out drawer. */
+function MobileNav({ pending }: { pending: number }) {
+  const path = usePathname();
+  const [open, setOpen] = useState(false);
+  const active = (href: string) => path === href || (href !== '/dashboard' && path.startsWith(href));
+
+  useEffect(() => setOpen(false), [path]);
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const h = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    window.addEventListener('keydown', h);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener('keydown', h);
+    };
+  }, [open]);
+
+  return (
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        className="-ml-1.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-grey-700 transition-colors hover:bg-grey-100 xl:hidden"
+        aria-label="Open navigation"
+        aria-expanded={open}
+      >
+        <Menu size={20} />
+      </button>
+      <AnimatePresence>
+        {open && (
+          <div className="fixed inset-0 z-50 xl:hidden" role="dialog" aria-modal="true" aria-label="Navigation">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-grey-950/40"
+              onClick={() => setOpen(false)}
+            />
+            <motion.aside
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={transition}
+              className="absolute inset-y-0 left-0 flex w-[min(20rem,85vw)] flex-col bg-white shadow-pop"
+            >
+              <div className="flex h-topbar shrink-0 items-center justify-between border-b border-grey-150 px-4">
+                <div className="flex items-center gap-2.5">
+                  <Mark />
+                  <div className="text-[16px] font-bold tracking-tight text-grey-900">UniMat</div>
+                </div>
+                <button
+                  onClick={() => setOpen(false)}
+                  className="flex h-9 w-9 items-center justify-center rounded-md text-grey-600 transition-colors hover:bg-grey-100"
+                  aria-label="Close navigation"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              <div className="border-b border-grey-150 p-4 md:hidden">
+                <GlobalLookup onSubmit={() => setOpen(false)} />
+              </div>
+              <nav aria-label="Primary" className="scroll-thin flex-1 overflow-y-auto px-2 py-3">
+                {NAV.map((g) => (
+                  <div key={g.group} className="mb-3">
+                    <div className="px-3 pb-1.5 pt-1 text-micro font-semibold uppercase tracking-[0.08em] text-grey-400">{g.group}</div>
+                    {g.items.map((it) => {
+                      const on = active(it.href);
+                      return (
+                        <Link
+                          key={it.href}
+                          href={it.href}
+                          aria-current={on ? 'page' : undefined}
+                          onClick={() => setOpen(false)}
+                          className={cx(
+                            'flex items-center gap-3 rounded-md px-3 py-2.5 text-dense font-medium transition-colors',
+                            on ? 'bg-primary-100/60 font-semibold text-primary-800' : 'text-grey-700 hover:bg-grey-50',
+                          )}
+                        >
+                          <span className={on ? 'text-primary-800' : 'text-grey-400'}>{it.icon}</span>
+                          <span className="flex-1">{it.label}</span>
+                          {it.tag && (
+                            <span className="rounded-sm border border-grey-200 bg-grey-50 px-1 font-mono text-[10px] font-medium text-grey-600">{it.tag}</span>
+                          )}
+                          {it.badge === 'pending' && pending > 0 && (
+                            <span className="tabular rounded-sm bg-amber-500 px-1.5 text-micro font-semibold text-white">{pending}</span>
+                          )}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                ))}
+              </nav>
+            </motion.aside>
+          </div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
@@ -180,25 +272,26 @@ function RoleSwitcher() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex h-9 items-center gap-2.5 rounded-md border border-grey-200 bg-white pl-1.5 pr-2.5 hover:border-grey-300 hover:bg-grey-50 transition-colors"
+        className="flex h-9 items-center gap-2.5 rounded-md border border-grey-200 bg-white px-1 hover:border-grey-300 hover:bg-grey-50 transition-colors sm:pl-1.5 sm:pr-2.5"
         aria-haspopup="menu"
         aria-expanded={open}
+        aria-label={`${session.user.name} — switch role`}
       >
         <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary-100 text-caption font-semibold text-primary-800">
           {initials}
         </span>
-        <span className="text-left leading-tight">
+        <span className="hidden text-left leading-tight sm:block">
           <span className="block text-dense font-semibold text-grey-900">{session.user.name}</span>
           <span className="block text-micro font-medium uppercase tracking-[0.08em] text-grey-500">
             {ROLE_LABEL[session.user.role as Role]} · <span className="font-semibold text-primary-800">{session.user.orgCode}</span>
           </span>
         </span>
-        <ChevronDown size={14} className="text-grey-400 ml-0.5" />
+        <ChevronDown size={14} className="ml-0.5 hidden text-grey-400 sm:block" />
       </button>
 
       <AnimatePresence>
         {open && (
-          <motion.div {...fadeUp} role="menu" className="absolute right-0 top-11 z-40 w-80 rounded-lg border border-grey-200 bg-white p-1.5 shadow-pop">
+          <motion.div {...fadeUp} role="menu" className="absolute right-0 top-11 z-40 w-[min(20rem,calc(100vw-2rem))] rounded-lg border border-grey-200 bg-white p-1.5 shadow-pop">
             <div className="px-3 pb-2 pt-1.5 text-micro font-semibold uppercase tracking-[0.08em] text-grey-500">
               Role Simulation (CPSE Single Sign-On)
             </div>
@@ -226,7 +319,7 @@ function RoleSwitcher() {
   );
 }
 
-function GlobalLookup() {
+function GlobalLookup({ onSubmit }: { onSubmit?: () => void }) {
   const router = useRouter();
   const [q, setQ] = useState('');
   const ref = useRef<HTMLInputElement>(null);
@@ -247,6 +340,7 @@ function GlobalLookup() {
       className="relative w-full max-w-[460px]"
       onSubmit={(e) => {
         e.preventDefault();
+        onSubmit?.();
         if (q.trim()) router.push(`/mappings?q=${encodeURIComponent(q.trim())}`);
       }}
     >
@@ -259,7 +353,7 @@ function GlobalLookup() {
         placeholder="Look up legacy code, CNMC, or item description…"
         aria-label="Global lookup"
       />
-      <kbd className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-sm border border-grey-200 bg-white px-1.5 font-mono text-[11px] text-grey-500">
+      <kbd className="absolute right-2.5 hidden md:block top-1/2 -translate-y-1/2 rounded-sm border border-grey-200 bg-white px-1.5 font-mono text-[11px] text-grey-500">
         /
       </kbd>
     </form>
@@ -279,12 +373,13 @@ export function AppShell({ children }: { children: ReactNode }) {
       <header className="sticky top-0 z-30">
         <UtilityStrip driver={session?.driver} />
         <div className="border-b border-grey-150 bg-white">
-          <div className="mx-auto flex h-topbar max-w-[1600px] items-center gap-6 px-6">
-            <Link href="/" className="flex shrink-0 items-center gap-3">
+          <div className="mx-auto flex h-topbar max-w-[1600px] items-center gap-3 px-4 sm:px-6 lg:gap-6">
+            <MobileNav pending={session?.pendingReviews ?? 0} />
+            <Link href="/" className="flex shrink-0 items-center gap-2.5 sm:gap-3">
               <Mark />
               <div className="leading-tight">
-                <div className="text-[16px] font-bold tracking-tight text-grey-900">BharatM3</div>
-                <div className="text-micro font-medium uppercase tracking-[0.08em] text-grey-500">National Material Master</div>
+                <div className="text-[16px] font-bold tracking-tight text-grey-900">UniMat</div>
+                <div className="hidden text-micro font-medium uppercase tracking-[0.08em] text-grey-500 sm:block">National Material Master</div>
               </div>
             </Link>
             <span className="hidden h-8 w-px bg-grey-200 lg:block" aria-hidden />
@@ -305,7 +400,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
         <NavBar pending={session?.pendingReviews ?? 0} />
       </header>
-      <main className="mx-auto max-w-[1600px] px-6 pb-16 pt-6">{children}</main>
+      <main className="mx-auto max-w-[1600px] px-4 pb-16 pt-5 sm:px-6 sm:pt-6">{children}</main>
     </div>
   );
 }

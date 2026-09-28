@@ -79,10 +79,10 @@ export function Panel({
             {title && <h2 className="panel-title">{title}</h2>}
             {subtitle && <p className="mt-0.5 text-caption text-grey-500 font-normal">{subtitle}</p>}
           </div>
-          {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
+          {actions && <div className="flex max-w-full flex-wrap items-center gap-2">{actions}</div>}
         </header>
       )}
-      <div className={bodyClassName}>{children}</div>
+      <div className={cx('overflow-x-auto', bodyClassName)}>{children}</div>
     </section>
   );
 }
@@ -105,7 +105,7 @@ export function PageHeader({
         <h1 className="font-display text-display font-bold tracking-tight text-grey-900 sm:text-section">{title}</h1>
         {description && <p className="mt-2 text-body leading-relaxed text-grey-500">{description}</p>}
       </div>
-      {actions && <div className="flex items-center gap-2">{actions}</div>}
+      {actions && <div className="flex max-w-full flex-wrap items-center gap-2">{actions}</div>}
     </div>
   );
 }
@@ -124,7 +124,7 @@ export function Tabs<T extends string>({
   items: { value: T; label: ReactNode; count?: number; tone?: 'amber' | 'veto' | 'neutral' | 'high' }[];
 }) {
   return (
-    <div role="tablist" className="scroll-thin flex items-end gap-1.5 overflow-x-auto border-b border-grey-200">
+    <div role="tablist" className="no-scrollbar flex items-end gap-1.5 overflow-x-auto border-b border-grey-200">
       {items.map((it) => {
         const active = it.value === value;
         return (
@@ -179,13 +179,13 @@ export function Segmented<T extends string>({
   items: { value: T; label: ReactNode }[];
 }) {
   return (
-    <div className="inline-flex rounded-md border border-grey-200 bg-grey-100 p-0.5">
+    <div className="no-scrollbar inline-flex max-w-full overflow-x-auto rounded-md border border-grey-200 bg-grey-100 p-0.5">
       {items.map((it) => (
         <button
           key={it.value}
           onClick={() => onChange(it.value)}
           className={cx(
-            'relative h-7 rounded-sm px-3 text-caption font-semibold transition-colors duration-150',
+            'relative h-7 shrink-0 whitespace-nowrap rounded-sm px-3 text-caption font-semibold transition-colors duration-150',
             it.value === value ? 'text-primary-800' : 'text-grey-600 hover:text-grey-900',
           )}
         >
@@ -259,7 +259,7 @@ export function Dialog({
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-grey-950/50 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-grey-950/50 p-3 sm:p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -277,7 +277,7 @@ export function Dialog({
             {...fadeUp}
             onMouseDown={(e) => e.stopPropagation()}
           >
-            <div className="flex items-start justify-between border-b border-grey-150 bg-white px-6 py-4">
+            <div className="flex items-start justify-between border-b border-grey-150 bg-white px-4 py-4 sm:px-6">
               <div className="min-w-0 pr-4">
                 <h3 className="text-card font-display font-semibold text-grey-900">{title}</h3>
                 {subtitle && <p className="mt-0.5 text-caption text-grey-500 font-normal">{subtitle}</p>}
@@ -290,8 +290,8 @@ export function Dialog({
                 <X size={16} />
               </button>
             </div>
-            <div className="scroll-thin flex-1 overflow-y-auto px-6 py-5">{children}</div>
-            {footer && <div className="flex shrink-0 justify-end gap-2 border-t border-grey-150 bg-grey-50 px-6 py-3.5">{footer}</div>}
+            <div className="scroll-thin flex-1 overflow-y-auto px-4 py-5 sm:px-6">{children}</div>
+            {footer && <div className="flex shrink-0 flex-wrap justify-end gap-2 border-t border-grey-150 bg-grey-50 px-4 py-3.5 sm:px-6">{footer}</div>}
           </motion.div>
         </motion.div>
       )}

@@ -1,7 +1,7 @@
-# BharatM3 — UI/UX Overhaul Decisions & Architecture
+# UniMat — UI/UX Overhaul Decisions & Architecture
 
 ## Overview
-This document records the architectural and UI/UX design decisions made during the comprehensive UI/UX overhaul pass for **BharatM3 (SIH PS 26099)**.
+This document records the architectural and UI/UX design decisions made during the comprehensive UI/UX overhaul pass for **UniMat**.
 
 ---
 
@@ -52,12 +52,12 @@ Every dense screen has been restructured to show clean, glanceable summary eleme
 
 ## 3. Public Landing Page at Root (`/`)
 - Built as a dedicated public-facing page separate from the internal application shell:
-  1. **Hero**: Product name (BharatM3), tagline, description, primary CTA ("View Live Dashboard" → `/dashboard`), and an animated interactive 6205 bearing harmonisation visual fragment.
+  1. **Hero**: Product name (UniMat), tagline, description, primary CTA ("View Live Dashboard" → `/dashboard`), and an animated interactive 6205 bearing harmonisation visual fragment.
   2. **The Problem, Briefly**: 3 compact stat cards illustrating the 5+ codes dilemma, fragmented demand, and safety risks.
   3. **How It Works**: 5-stage progressive pipeline cards (Ingest → Normalize → Classify → Match & Veto → Harmonize).
   4. **Key Capabilities**: 4 enterprise capability cards (Explainable AI, Hard Safety Vetoes, Human-in-the-Loop, Zero ERP Disruption).
   5. **Live Data Proof**: Real animated count-up numbers fetched live from database `/api/dashboard`.
-  6. **Attribution Footer**: MoPNG, CPCL, SIH PS 26099.
+  6. **Attribution Footer**: UniMat · Participating CPSEs.
 
 ---
 

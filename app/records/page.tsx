@@ -363,21 +363,21 @@ function RecordsInner() {
       <Panel
         title={batch ? 'Records in selected batch' : `All CPSE records (${rows.length})`}
         actions={
-          <div className="flex items-center gap-2">
+          <div className="flex max-w-full flex-wrap items-center gap-2">
             <input
-              className="input h-7 w-60"
+              className="input h-7 w-full sm:w-60"
               placeholder="Filter code / description…"
               value={q}
               onChange={(e) => setQ(e.target.value)}
               aria-label="Filter records"
             />
-            <select className="input h-7 w-28" value={org} onChange={(e) => setOrg(e.target.value)} aria-label="CPSE">
+            <select className="input h-7 flex-1 sm:w-28 sm:flex-none" value={org} onChange={(e) => setOrg(e.target.value)} aria-label="CPSE">
               <option value="ALL">All CPSEs</option>
               {orgs.map((o) => (
                 <option key={o}>{o}</option>
               ))}
             </select>
-            <select className="input h-7 w-36" value={cat} onChange={(e) => setCat(e.target.value)} aria-label="Category">
+            <select className="input h-7 flex-1 sm:w-36 sm:flex-none" value={cat} onChange={(e) => setCat(e.target.value)} aria-label="Category">
               <option value="ALL">All categories</option>
               {['BEARING', 'VALVE', 'CABLE', 'FASTENER', 'PUMP', 'UNCLASSIFIED'].map((c) => (
                 <option key={c} value={c}>

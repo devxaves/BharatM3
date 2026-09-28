@@ -643,7 +643,7 @@ export default function Dashboard() {
           <DialogSection title="Formula & Governance Meaning">
             <p className="text-caption text-grey-700 leading-relaxed">
               Reduction is defined as <code>(Mapped Legacy Codes - Canonical Codes) / Mapped Legacy Codes</code>.
-              When multiple CPSEs purchase identical physical items with disparate internal part numbers, BharatM3 establishes a single Common National Material Code without altering internal ERP numbering.
+              When multiple CPSEs purchase identical physical items with disparate internal part numbers, UniMat establishes a single Common National Material Code without altering internal ERP numbering.
             </p>
           </DialogSection>
         </div>

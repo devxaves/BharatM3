@@ -1,6 +1,6 @@
-# BharatM3 — Section 12 Self-Verification Report
+# UniMat — Section 12 Self-Verification Report
 
-**Project:** BharatM3 — AI-Driven National Material Master Harmonization (SIH PS 26099)  
+**Project:** UniMat — AI-Driven National Material Master Harmonization  
 **Pass:** UI/UX Overhaul & Acceptance Pass  
 **Date:** September 2026  
 

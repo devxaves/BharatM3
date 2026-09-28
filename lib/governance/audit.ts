@@ -11,7 +11,7 @@ export interface Actor {
   role: string;
 }
 
-export const SYSTEM_ACTOR: Actor = { id: null, name: 'BharatM3 matching engine', role: 'system' };
+export const SYSTEM_ACTOR: Actor = { id: null, name: 'UniMat matching engine', role: 'system' };
 
 /** Deterministic JSON (sorted keys) so the hash is reproducible during verification. */
 export function stableStringify(v: unknown): string {

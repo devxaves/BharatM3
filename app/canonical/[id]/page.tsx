@@ -125,8 +125,8 @@ export default function CanonicalPage({ params }: { params: { id: string } }) {
           <Panel title="Immutable Change History" subtitle="SHA-256 cryptographic trail for this material">
             <ol className="divide-y divide-grey-100">
               {data.history.map((h) => (
-                <li key={h.seq} className="grid grid-cols-[140px_1fr_auto] items-center gap-3 px-4 py-2 text-caption">
-                  <span className="font-mono text-micro text-grey-500">{fmtDateTime(h.occurredAt)}</span>
+                <li key={h.seq} className="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-0.5 px-4 py-2 text-caption sm:grid-cols-[140px_1fr_auto]">
+                  <span className="col-span-2 font-mono text-micro text-grey-500 sm:col-span-1">{fmtDateTime(h.occurredAt)}</span>
                   <div>
                     <span className="font-semibold text-grey-900">{h.action.replace(/_/g, ' ')}</span>
                     <span className="text-grey-500 font-sans ml-1">by {h.actorName}</span>

@@ -57,8 +57,8 @@ type StageState = { status: 'idle' | 'running' | 'done' | 'error'; result?: Reco
 const STAGES: { key: StageKey; title: string; desc: string }[] = [
   { key: 'ingest', title: 'Ingestion', desc: 'Idempotent load into raw_material_records — legacy data is never modified' },
   { key: 'normalize', title: 'Normalization', desc: 'Text clean-up, abbreviation expansion (versioned dictionary), UOM standardisation' },
-  { key: 'classify', title: 'Classification & extraction', desc: 'Category routing, category-specific attribute extraction, embeddings (pgvector)' },
-  { key: 'match', title: 'Hybrid matching', desc: 'Blocking + pgvector KNN → deterministic → fuzzy → semantic → fusion → safety vetoes → routing' },
+  { key: 'classify', title: 'Classification & extraction', desc: 'Category routing, category-specific attribute extraction, embeddings' },
+  { key: 'match', title: 'Hybrid matching', desc: 'Blocking + vector KNN → deterministic → fuzzy → semantic → fusion → safety vetoes → routing' },
 ];
 
 function StepHead({ n, title, done, active, children }: { n: number; title: string; done?: boolean; active?: boolean; children?: ReactNode }) {
@@ -121,7 +121,7 @@ function ColumnMapper({ parsed, mapping, setMapping }: { parsed: Parsed; mapping
       </div>
 
       <div className="min-w-0">
-        <div className="eyebrow mb-1.5">BharatM3 target schema</div>
+        <div className="eyebrow mb-1.5">UniMat target schema</div>
         <div className="space-y-1">
           {parsed.targets.map((t) => {
             const col = colFor(t.key);
@@ -226,7 +226,7 @@ function QualityReportModal({ v, open, onClose }: { v: Validation; open: boolean
       open={open}
       onClose={onClose}
       title="Data-Quality & Normalization Report"
-      subtitle={`${v.rows} extract rows evaluated against BharatM3 schemas`}
+      subtitle={`${v.rows} extract rows evaluated against UniMat schemas`}
       width={760}
       footer={
         <Button variant="outline" size="sm" onClick={onClose}>

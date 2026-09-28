@@ -105,7 +105,7 @@ const ENDPOINTS = [
       documents: [
         {
           IDOC: {
-            EDI_DC40: { IDOCTYP: 'MATMAS05', MESTYP: 'MATMAS', SNDPRN: 'BHARATM3', RCVPRN: 'CPCL_ECC' },
+            EDI_DC40: { IDOCTYP: 'MATMAS05', MESTYP: 'MATMAS', SNDPRN: 'UNIMAT', RCVPRN: 'CPCL_ECC' },
             E1MARAM: { MSGFN: '005', MATNR: '10004127', NORMT: 'IN-CPSE-01-000001', BISMT: '10004127', MEINS: 'EA' },
           },
         },
@@ -455,7 +455,7 @@ export default function IntegrationPage() {
                   )}
                 </div>
               }
-              subtitle="Live payload serialized directly from Postgres & SAP transformation engine"
+              subtitle="Live payload serialized directly from the database & SAP transformation engine"
               actions={
                 out && (
                   <div className="flex items-center gap-2">
@@ -596,7 +596,7 @@ export default function IntegrationPage() {
             <Panel title="Authentication & Security">
               <div className="p-4 text-dense text-grey-600 space-y-2.5">
                 <p>
-                  Production CPSE connections utilize <b>Mutual TLS (mTLS)</b> with X.509 client certificates issued by the National Informatics Centre (NIC) or Ministry PKI.
+                  Production CPSE connections utilize <b>Mutual TLS (mTLS)</b> with X.509 client certificates issued by a trusted PKI.
                 </p>
                 <div className="rounded-lg bg-amber-50 border border-amber-200 p-2.5 text-caption text-amber-900">
                   <b>Sandbox Mode:</b> The live sandbox endpoints demonstrated here run in mock tenant simulation mode.
@@ -705,7 +705,7 @@ export default function IntegrationPage() {
                 </div>
 
                 <div className="rounded-xl border-2 border-teal-600 bg-teal-50/50 p-4 shadow-sm">
-                  <div className="font-display text-dense font-bold text-teal-900">BharatM3 Hub</div>
+                  <div className="font-display text-dense font-bold text-teal-900">UniMat Hub</div>
                   <div className="text-micro text-teal-700 mt-1">AI Matching & Safety Vetoes</div>
                 </div>
 

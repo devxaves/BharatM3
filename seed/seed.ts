@@ -87,7 +87,7 @@ export async function seedDatabase(db: DB, log: SeedLog = console.log) {
   await appendAudit(db, SYSTEM_ACTOR, {
     action: 'PLATFORM_INITIALISED',
     entityType: 'platform',
-    entityId: 'bharatm3',
+    entityId: 'unimat',
     payload: { organizations: ORGS.length, dictionaryTerms: DICTIONARY_SEED.length, uomCodes: UOM_SEED.length, substitutionRules: SUBSTITUTION_RULES_SEED.length, note: 'Synthetic demonstration dataset — not real CPSE records' },
     at: new Date(tIngest.getTime() - DAY),
   });

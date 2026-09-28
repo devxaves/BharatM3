@@ -49,7 +49,7 @@ export function toIdoc(c: CanonicalForExport, receiver?: { org: string; client?:
         DOCNUM: `${stamp}${c.shortCode.slice(-6)}`,
         IDOCTYP: 'MATMAS05',
         MESTYP: 'MATMAS',
-        SNDPOR: 'BHARATM3',
+        SNDPOR: 'UNIMAT',
         SNDPRT: 'LS',
         SNDPRN: 'BM3_NMM',
         RCVPOR: receiver ? `SAP${receiver.org}` : 'SAPALL',

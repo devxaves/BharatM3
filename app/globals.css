@@ -47,7 +47,7 @@
     @apply border border-grey-200 bg-white;
   }
   .panel-header {
-    @apply flex items-center justify-between gap-3 border-b border-grey-150 bg-white px-5 py-3.5;
+    @apply flex flex-wrap items-center justify-between gap-3 border-b border-grey-150 bg-white px-4 py-3.5 sm:px-5;
   }
   .panel-title {
     @apply font-display text-lead font-semibold tracking-tight text-grey-900;
@@ -89,6 +89,13 @@
   .scroll-thin {
     scrollbar-width: thin;
     scrollbar-color: rgb(var(--c-grey-300)) transparent;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 
   /* Dense data table */

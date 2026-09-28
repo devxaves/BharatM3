@@ -198,7 +198,7 @@ export default function GovernancePage() {
         title="Matching rules & configuration"
         description="Versioned weights, thresholds, schemas, and material substitution rules governing AI harmonization."
         actions={
-          <div className="flex items-center gap-2">
+          <div className="flex max-w-full flex-wrap items-center gap-2">
             <Segmented
               value={activeTab}
               onChange={setActiveTab}

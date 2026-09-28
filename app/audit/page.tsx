@@ -164,16 +164,16 @@ function AuditInner() {
       <Panel
         title={`${data?.total ?? 0} immutable events`}
         actions={
-          <div className="flex items-center gap-2">
+          <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
             <input
-              className="input h-8 w-64 text-dense"
+              className="input h-8 w-full text-dense sm:w-64"
               placeholder="Search actor, entity, reason, payload…"
               value={q}
               onChange={(e) => setQ(e.target.value)}
               aria-label="Search audit"
             />
             <select
-              className="input h-8 w-60 text-dense font-medium"
+              className="input h-8 w-full text-dense font-medium sm:w-60"
               value={action}
               onChange={(e) => setAction(e.target.value)}
               aria-label="Action filter"

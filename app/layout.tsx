@@ -11,7 +11,7 @@ import { AppShell } from '@/components/shell/app-shell';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
-  title: { default: 'BharatM3 — National Material Master', template: '%s · BharatM3' },
+  title: { default: 'UniMat — National Material Master', template: '%s · UniMat' },
   description: 'AI-driven standardisation and harmonisation of material codes across CPSEs — One Nation, One Material Code.',
 };
 

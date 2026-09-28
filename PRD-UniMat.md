@@ -1,6 +1,5 @@
-# Product Requirements Document — BharatM3
+# Product Requirements Document — UniMat
 ## AI-Driven National Material Master Harmonization Platform for CPSEs
-### SIH Problem Statement 26099 — Ministry of Petroleum & Natural Gas / CPCL
 
 **Document purpose:** This PRD is written to be read and executed by an autonomous coding agent (e.g. an "Antigravity"-style build agent). It contains everything needed to scaffold, implement, and self-verify the project without further clarification. Where a decision has been made, it is stated as a rule, not a suggestion. Where the agent must make a judgment call, that is explicitly flagged as "AGENT DISCRETION."
 
